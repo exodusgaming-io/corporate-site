@@ -17,7 +17,7 @@ What a static export cannot do (Next.js docs, "Static Exports — Unsupported Fe
 
 | | URL | Indexing |
 |---|---|---|
-| Staging (now) | https://new.exodusgaming.io | `noindex`, `robots.txt` disallows all |
+| Staging (now) | https://staging.exodusgaming.io | `noindex`, `robots.txt` disallows all |
 | Production (after approval) | https://exodusgaming.io | on, via repo variable `SITE_INDEXABLE=true` |
 
 The live exodusgaming.io is still served by `exodusgaming-io/website` until the DNS switch (#6545).
