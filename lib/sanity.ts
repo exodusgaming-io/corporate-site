@@ -16,10 +16,21 @@ export type SiteSettings = {
   tagline: string | null;
 };
 
+export type Redirect = {
+  from: string;
+  to: string;
+};
+
 // A failed request fails the build, so a Sanity outage keeps the last deploy
 // live instead of publishing a page without content.
 export function getSiteSettings(): Promise<SiteSettings | null> {
   return sanity.fetch<SiteSettings | null>(
     `*[_id == "siteSettings"][0]{title, tagline}`,
+  );
+}
+
+export function getRedirects(): Promise<Redirect[]> {
+  return sanity.fetch<Redirect[]>(
+    `*[_type == "redirect" && defined(from) && defined(to)] | order(from asc){from, to}`,
   );
 }

@@ -34,7 +34,13 @@ The live exodusgaming.io is still served by `exodusgaming-io/website` until the 
 
 Access is by invitation to the Sanity project: only members can open the Studio or edit content. Invite editors by their company e-mail and have them sign in with Google. The hosted Studio signs in through the Sanity Dashboard, which also offers GitHub and e-mail/password, so the Google-only setting in `studio/sanity.config.ts` does not restrict it; check how members signed in under Manage → Members.
 
-Content types: **Site settings** (singleton: title, tagline), **Blog post**, **News item**, **Author**; posts and news carry an **SEO** block (meta title, description, share image, noindex).
+Content types: **Site settings** (singleton: title, tagline), **Blog post**, **News item**, **Author**, **Redirect**; posts and news carry an **SEO** block (meta title, description, share image, noindex).
+
+### Redirects
+
+Editors add a **Redirect** (from `/old-path`, to `/new-path` or `https://…`) and publish. After `next build`, `scripts/write-redirects.mts` writes a page at each `from` path that sends visitors on at once (meta refresh + `location.replace`, with a canonical link). GitHub Pages cannot answer with a real 301; search engines treat an instant meta refresh as a permanent redirect. At the domain switch (#6545) redirects move to Cloudflare rules for real 301s.
+
+The script skips a redirect, with a warning in the build log, when a page already exists at that path, when the path or address is not valid (only site paths and http(s) addresses are allowed), or when another redirect already starts there. The Studio checks the same rules before publishing.
 
 The Studio lives in `studio/` with its own `package.json`:
 
