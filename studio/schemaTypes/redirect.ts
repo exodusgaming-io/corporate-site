@@ -1,12 +1,22 @@
 import {ArrowRightIcon} from '@sanity/icons/ArrowRight'
-import {defineField, defineType} from 'sanity'
+import {defineField, defineType, getPublishedId} from 'sanity'
 
-// Same rules as scripts/write-redirects.ts, which turns these documents into pages at build.
-const PATH = /^\/(?!\/)[^\s?#]*$/
+// Keep in step with scripts/write-redirects.mts, which turns these documents into pages at build.
+// The build alone can tell whether a page already exists at `from`; it skips the redirect then.
+const PATH = /^\/(?!\/)[^\s?#\\]*$/
 
+// Path without query, hash, index.html or trailing slash: /a/ = /a = /a/index.html = /a?x#y.
 function normalize(path: string) {
-  return path.length > 1 ? path.replace(/\/+$/, '') : path
+  const bare = path.split(/[?#]/)[0].replace(/\/index\.html?$/i, '/')
+  return bare.length > 1 ? bare.replace(/\/+$/, '') : bare
 }
+
+function unusableSegment(path: string) {
+  const segments = path.split('/').filter(Boolean)
+  return segments[0] === '_next' || segments.some((s) => s === '.' || s === '..')
+}
+
+const ADDRESS_HINT = 'Use a path starting with / or an http(s) address'
 
 export const redirect = defineType({
   name: 'redirect',
@@ -23,12 +33,15 @@ export const redirect = defineType({
       validation: (rule) =>
         rule.required().custom(async (from, context) => {
           if (!from) return true
-          if (!PATH.test(from)) return 'Start with / and leave out spaces, ? and #'
+          if (!PATH.test(from)) return 'Start with / and leave out spaces, \\, ? and #'
           if (normalize(from) === '/') return 'The home page cannot be redirected'
-          const id = (context.document?._id ?? '').replace(/^drafts\./, '')
+          if (unusableSegment(from))
+            return 'Paths under /_next/ or with . or .. cannot be redirected'
+          const id = getPublishedId(context.document?._id ?? '')
           const client = context.getClient({apiVersion: '2026-11-20'})
           const taken = await client.fetch<number>(
-            'count(*[_type == "redirect" && !(_id in [$id, $draft]) && from in [$from, $from + "/", $bare]])',
+            `count(*[_type == "redirect" && !(_id in [$id, $draft]) && !(_id in path("versions.**"))
+              && from in [$from, $from + "/", $bare]])`,
             {id, draft: `drafts.${id}`, from, bare: normalize(from)},
           )
           return taken > 0 ? 'Another redirect already starts from this path' : true
@@ -42,16 +55,15 @@ export const redirect = defineType({
       validation: (rule) =>
         rule.required().custom((to, context) => {
           if (!to) return true
-          const from = (context.document as {from?: string} | undefined)?.from
-          if (from && normalize(from) === normalize(to)) return 'Points to itself'
-          if (PATH.test(to.split(/[?#]/)[0])) return true
+          if (PATH.test(to.split(/[?#]/)[0])) {
+            const from = (context.document as {from?: string} | undefined)?.from
+            return from && normalize(from) === normalize(to) ? 'Points to the same page' : true
+          }
           try {
             const url = new URL(to)
-            return url.protocol === 'https:' || url.protocol === 'http:'
-              ? true
-              : 'Use a path starting with / or an http(s) address'
+            return url.protocol === 'https:' || url.protocol === 'http:' ? true : ADDRESS_HINT
           } catch {
-            return 'Use a path starting with / or an http(s) address'
+            return ADDRESS_HINT
           }
         }),
     }),

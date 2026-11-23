@@ -2,22 +2,37 @@
 // document in Sanity. GitHub Pages cannot answer with a real 301; an instant meta
 // refresh is what search engines treat as a permanent redirect. Real 301s move to
 // Cloudflare at the domain switch (#6545).
-import { access, mkdir, writeFile } from "node:fs/promises";
+//
+// A bad document never fails the build (that would stop every publish until it is
+// fixed): it is skipped with a warning. A failed request to Sanity still fails it.
+import { mkdir, stat, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { getRedirects } from "../lib/sanity.ts";
 
 const OUT = "out";
-// Same rules as the Redirect schema in studio/schemaTypes/redirect.ts.
-const PATH = /^\/(?!\/)[^\s?#]*$/;
+// Keep in step with the Redirect schema in studio/schemaTypes/redirect.ts.
+const PATH = /^\/(?!\/)[^\s?#\\]*$/;
 
-// The file GitHub Pages serves for `from`, or null if `from` is not a safe path.
-function fileFor(from: string): string | null {
+// Path without query, hash, index.html or trailing slash: /a/ = /a = /a/index.html = /a?x#y.
+function normalize(path: string): string {
+  const bare = path.split(/[?#]/)[0].replace(/\/index\.html?$/i, "/");
+  return bare.length > 1 ? bare.replace(/\/+$/, "") : bare;
+}
+
+// The path segments of `from`, or null if no page may be written for it.
+function segmentsOf(from: string): string[] | null {
   if (!PATH.test(from)) return null;
   const segments = from.split("/").filter(Boolean);
   if (segments.length === 0) return null; // the home page
   if (segments[0] === "_next" || segments.some((s) => s === "." || s === "..")) return null;
-  // /old.html is a file; /old and /old/ are a folder (next.config.ts: trailingSlash).
-  return segments.at(-1)!.includes(".")
+  return segments;
+}
+
+// /old.html is served as that file. Anything else, /deck.pdf included, gets a folder
+// with index.html, which Pages serves for /old/ and reaches from /old with its own 301
+// (next.config.ts: trailingSlash). A page named deck.pdf would be served as a PDF.
+function fileFor(from: string, segments: string[]): string {
+  return /\.html?$/i.test(segments.at(-1)!) && !from.endsWith("/")
     ? join(OUT, ...segments)
     : join(OUT, ...segments, "index.html");
 }
@@ -57,10 +72,9 @@ function page(to: string): string {
 `;
 }
 
-async function exists(path: string): Promise<boolean> {
+async function isFile(path: string): Promise<boolean> {
   try {
-    await access(path);
-    return true;
+    return (await stat(path)).isFile();
   } catch {
     return false;
   }
@@ -70,18 +84,32 @@ const redirects = await getRedirects();
 const written = new Set<string>();
 
 for (const { from, to } of redirects) {
-  const file = fileFor(from);
+  const segments = segmentsOf(from);
   const target = targetFor(to);
-  if (!file || !target) {
+  if (!segments || !target) {
     console.warn(`redirects: skipped ${from} -> ${to}: not a valid path or address`);
-  } else if (written.has(file)) {
+    continue;
+  }
+  if (target.startsWith("/") && normalize(from) === normalize(target)) {
+    console.warn(`redirects: skipped ${from} -> ${to}: points to the same page`);
+    continue;
+  }
+  const file = fileFor(from, segments);
+  if (written.has(file)) {
     console.warn(`redirects: skipped ${from}: another redirect already starts there`);
-  } else if (await exists(file)) {
+    continue;
+  }
+  // A page at this path, or a file where the folder would go (/robots.txt).
+  if ((await isFile(file)) || (await isFile(join(OUT, ...segments)))) {
     console.warn(`redirects: skipped ${from}: a page exists at this path`);
-  } else {
+    continue;
+  }
+  try {
     await mkdir(dirname(file), { recursive: true });
     await writeFile(file, page(target));
     written.add(file);
+  } catch (error) {
+    console.warn(`redirects: skipped ${from}: ${(error as Error).message}`);
   }
 }
 

@@ -13,7 +13,7 @@ Why Sanity: nothing to host or patch (Payload needs its own server and Postgres)
 
 Why this and not Cloudflare Workers or a container: the zone lives in a Cloudflare account where we cannot deploy Workers, and the site needs no server. GitHub Pages is how the current exodusgaming.io is already hosted (`exodusgaming-io/website`), so it adds no new infrastructure. Pages on our GitHub plan needs a public repository, so nothing secret goes into this repo: keys live in Actions secrets.
 
-What a static export cannot do (Next.js docs, "Static Exports — Unsupported Features"): redirects, headers, draft mode, ISR, image optimization. Redirects will be Cloudflare rules; CMS draft preview needs a separate runtime and is decided with the CMS.
+What a static export cannot do (Next.js docs, "Static Exports — Unsupported Features"): redirects, headers, draft mode, ISR, image optimization. Redirects are pages written at build (see "Redirects" below) until the domain switch moves them to Cloudflare rules; CMS draft preview needs a separate runtime and is decided with the CMS.
 
 ## Environments
 
@@ -40,7 +40,9 @@ Content types: **Site settings** (singleton: title, tagline), **Blog post**, **N
 
 Editors add a **Redirect** (from `/old-path`, to `/new-path` or `https://…`) and publish. After `next build`, `scripts/write-redirects.mts` writes a page at each `from` path that sends visitors on at once (meta refresh + `location.replace`, with a canonical link). GitHub Pages cannot answer with a real 301; search engines treat an instant meta refresh as a permanent redirect. At the domain switch (#6545) redirects move to Cloudflare rules for real 301s.
 
-The script skips a redirect, with a warning in the build log, when a page already exists at that path, when the path or address is not valid (only site paths and http(s) addresses are allowed), or when another redirect already starts there. The Studio checks the same rules before publishing.
+A bad redirect never fails the build; the script skips it with a warning in the build log (GitHub Actions) when the path or address is not valid (only site paths and http(s) addresses), when it points to the same page, when another redirect already starts there, or when a page exists at that path. The Studio blocks all of these before publishing except the last one, which only the build can see.
+
+A `from` ending in `.html` becomes that file; any other `from` (`/old`, `/old/`, `/deck.pdf`) becomes `…/index.html`, which GitHub Pages serves at `/old/` and reaches from `/old` with its own 301.
 
 The Studio lives in `studio/` with its own `package.json`:
 
