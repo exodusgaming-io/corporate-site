@@ -83,6 +83,22 @@ async function isFile(path: string): Promise<boolean> {
 const redirects = await getRedirects();
 const written = new Set<string>();
 
+// Where each site path sends visitors, to catch /a -> /a/#x and /a -> /b -> /a.
+const next = new Map<string, string>();
+for (const { from, to } of redirects) {
+  const target = targetFor(to);
+  if (segmentsOf(from) && target?.startsWith("/")) next.set(normalize(from), normalize(target));
+}
+
+function loops(from: string): boolean {
+  const seen = new Set<string>();
+  for (let at = normalize(from); next.has(at); at = next.get(at)!) {
+    if (seen.has(at)) return true;
+    seen.add(at);
+  }
+  return false;
+}
+
 for (const { from, to } of redirects) {
   const segments = segmentsOf(from);
   const target = targetFor(to);
@@ -90,8 +106,8 @@ for (const { from, to } of redirects) {
     console.warn(`redirects: skipped ${from} -> ${to}: not a valid path or address`);
     continue;
   }
-  if (target.startsWith("/") && normalize(from) === normalize(target)) {
-    console.warn(`redirects: skipped ${from} -> ${to}: points to the same page`);
+  if (loops(from)) {
+    console.warn(`redirects: skipped ${from} -> ${to}: ends in a redirect loop`);
     continue;
   }
   const file = fileFor(from, segments);

@@ -40,7 +40,7 @@ Content types: **Site settings** (singleton: title, tagline), **Blog post**, **N
 
 Editors add a **Redirect** (from `/old-path`, to `/new-path` or `https://…`) and publish. After `next build`, `scripts/write-redirects.mts` writes a page at each `from` path that sends visitors on at once (meta refresh + `location.replace`, with a canonical link). GitHub Pages cannot answer with a real 301; search engines treat an instant meta refresh as a permanent redirect. At the domain switch (#6545) redirects move to Cloudflare rules for real 301s.
 
-A bad redirect never fails the build; the script skips it with a warning in the build log (GitHub Actions) when the path or address is not valid (only site paths and http(s) addresses), when it points to the same page, when another redirect already starts there, or when a page exists at that path. The Studio blocks all of these before publishing except the last one, which only the build can see.
+A bad redirect never fails the build; the script skips it with a warning in the build log (GitHub Actions) when the path or address is not valid (only site paths and http(s) addresses), when it leads back to itself (`/a` → `/a/#x`, or `/a` → `/b` → `/a`), when another redirect already starts there, or when a page exists at that path. The Studio blocks these before publishing too, except loops across several redirects and existing pages, which only the build can see.
 
 A `from` ending in `.html` becomes that file; any other `from` (`/old`, `/old/`, `/deck.pdf`) becomes `…/index.html`, which GitHub Pages serves at `/old/` and reaches from `/old` with its own 301.
 

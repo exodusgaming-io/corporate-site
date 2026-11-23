@@ -41,7 +41,7 @@ export const redirect = defineType({
           const client = context.getClient({apiVersion: '2026-11-20'})
           const taken = await client.fetch<number>(
             `count(*[_type == "redirect" && !(_id in [$id, $draft]) && !(_id in path("versions.**"))
-              && from in [$from, $from + "/", $bare]])`,
+              && from in [$from, $bare, $bare + "/", $bare + "/index.html", $bare + "/index.htm"]])`,
             {id, draft: `drafts.${id}`, from, bare: normalize(from)},
           )
           return taken > 0 ? 'Another redirect already starts from this path' : true
