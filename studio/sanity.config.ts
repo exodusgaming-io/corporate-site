@@ -11,8 +11,9 @@ export default defineConfig({
   projectId: 'a1r4gwxv',
   dataset: 'production',
 
-  // Google only: editors sign in with their company Google account and its 2FA.
-  // A static providers array replaces Sanity's default list (GitHub, e-mail/password).
+  // Only Google on the Studio's own login screen (`sanity dev`, self-hosted builds).
+  // The hosted *.sanity.studio signs in through the Sanity Dashboard instead, which offers
+  // every provider. Who gets in is decided by project membership (invitations), not by this list.
   auth: {
     redirectOnSingle: true,
     providers: [

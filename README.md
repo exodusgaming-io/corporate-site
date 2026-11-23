@@ -9,7 +9,7 @@ The company site. Trello: epic #6539, this setup #6540.
 - **Cloudflare** stays in front for DNS (zone `exodusgaming.io`).
 - **CMS: Sanity** (hosted). The site reads published content at build time with `@sanity/client` (`lib/sanity.ts`); there are no runtime requests to Sanity. A publish in Sanity will rebuild the site through the `repository_dispatch` event `content-published`.
 
-Why Sanity: nothing to host or patch (Payload needs its own server and Postgres), editors sign in with Google and its 2FA, and Contentful's free plan does not allow commercial use (Lite is €300/month).
+Why Sanity: nothing to host or patch (Payload needs its own server and Postgres), editors can sign in with their Google account, and Contentful's free plan does not allow commercial use (Lite is €300/month).
 
 Why this and not Cloudflare Workers or a container: the zone lives in a Cloudflare account where we cannot deploy Workers, and the site needs no server. GitHub Pages is how the current exodusgaming.io is already hosted (`exodusgaming-io/website`), so it adds no new infrastructure. Pages on our GitHub plan needs a public repository, so nothing secret goes into this repo: keys live in Actions secrets.
 
@@ -32,7 +32,7 @@ The live exodusgaming.io is still served by `exodusgaming-io/website` until the 
 | Project | `a1r4gwxv`, dataset `production` (public read: only published documents) |
 | Manage | https://www.sanity.io/organizations/ohbjl1i3u/project/a1r4gwxv |
 
-Editors get access by invitation to the Sanity project and sign in with their company Google account.
+Access is by invitation to the Sanity project: only members can open the Studio or edit content. Invite editors by their company e-mail and have them sign in with Google. The hosted Studio signs in through the Sanity Dashboard, which also offers GitHub and e-mail/password, so the Google-only setting in `studio/sanity.config.ts` does not restrict it; check how members signed in under Manage → Members.
 
 Content types: **Site settings** (singleton: title, tagline), **Blog post**, **News item**, **Author**; posts and news carry an **SEO** block (meta title, description, share image, noindex).
 
@@ -42,7 +42,7 @@ The Studio lives in `studio/` with its own `package.json`:
 cd studio
 npm ci
 npm run dev       # http://localhost:3333
-npm run lint && npm run typecheck
+npm run lint && npm run typecheck   # also run on every PR
 npm run deploy    # rebuilds and publishes https://exodusgaming.sanity.studio
 ```
 
