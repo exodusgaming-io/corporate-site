@@ -35,6 +35,25 @@ jobs:
         with:
           path: out
 
+  # The Studio is deployed by hand (`npm run deploy` in studio/); CI only checks it.
+  studio:
+    if: github.event_name == 'pull_request' || github.event_name == 'push'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: studio
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: studio/package-lock.json
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npx sanity schema validate
+
   deploy:
     if: github.event_name != 'pull_request'
     needs: build
