@@ -46,9 +46,14 @@ A `from` ending in `.html` becomes that file; any other `from` (`/old`, `/old/`,
 
 ### Draft preview
 
-In the Studio, **Preview** (the Presentation tool) shows the staging site with the editor's unpublished changes as they type. The site is static, so the drafts come from the Studio itself: it runs the page's queries with the editor's session and passes the results into the framed page (`app/preview/`). The site holds no token, and visitors never load this code: it loads only when the page is framed.
+In the Studio, **Preview** (the Presentation tool) shows the staging site with the editor's unpublished changes as they type. The site is static, so the drafts come from the Studio itself: it runs the page's queries with the editor's session and passes the results into the page (`app/preview/`). The site holds no token. Visitors get the build-time HTML and none of the Sanity or preview code: it loads only when the page runs inside the Studio (framed, or in a tab opened with "Open preview").
 
-A page previews drafts only for content it reads through `useQuery` from `@sanity/react-loader` with the build-time data as `initial` (today: Site settings on the home page, `app/home-content.tsx`). New templates should read content the same way and get a location in `presentationTool` (`studio/sanity.config.ts`).
+How a page joins preview (the home page is the example):
+- a plain view component renders the data (`app/home-view.tsx`);
+- a client wrapper renders that view with the build-time data, and inside the Studio lazy-loads the live version (`app/home-content.tsx`);
+- the live version reads the same query through `useQuery` from `@sanity/react-loader` with the build-time data as `initial` (`app/home-live.tsx`);
+- queries and types live in `lib/queries.ts`; never import `lib/sanity.ts` from code every visitor loads, it would ship the Sanity client;
+- the document type gets a location in `presentationTool` (`studio/sanity.config.ts`).
 
 The Studio lives in `studio/` with its own `package.json`:
 

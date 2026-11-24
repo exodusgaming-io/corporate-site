@@ -1,10 +1,12 @@
 import { createClient } from "@sanity/client";
 import type { QueryResponseInitial } from "@sanity/react-loader";
+import { SITE_SETTINGS_QUERY, type SiteSettings } from "./queries.ts";
 
-// Used at build time (static export) and, inside the Studio's Presentation tool, by
-// the preview bridge (app/preview/live-mode.tsx). The dataset is public, so no token:
-// only published documents are visible here. Drafts reach the preview through the
-// Studio, which runs the queries with the editor's own session.
+// Used at build time (static export) and by the preview bridge (app/preview/live-mode.tsx),
+// which loads only inside the Studio. Never import this module from a component every
+// visitor loads: it would ship the Sanity client to them; use lib/queries.ts there.
+// The dataset is public, so no token: only published documents are visible here. Drafts
+// reach the preview through the Studio, which runs the queries with the editor's session.
 export const sanity = createClient({
   projectId: "a1r4gwxv",
   dataset: "production",
@@ -14,17 +16,10 @@ export const sanity = createClient({
   perspective: "published",
 });
 
-export type SiteSettings = {
-  title: string | null;
-  tagline: string | null;
-};
-
 export type Redirect = {
   from: string;
   to: string;
 };
-
-export const SITE_SETTINGS_QUERY = `*[_id == "siteSettings"][0]{title, tagline}`;
 
 // A failed request fails the build, so a Sanity outage keeps the last deploy
 // live instead of publishing a page without content.

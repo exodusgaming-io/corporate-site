@@ -1,18 +1,13 @@
 "use client";
 
-import { lazy, Suspense, useSyncExternalStore } from "react";
+import { lazy, Suspense } from "react";
+import { useInStudio } from "./in-studio";
 
-// The preview code loads only when the site is framed, i.e. inside the Studio's
-// Presentation tool; visitors never download it.
+// The preview bridge loads only inside the Studio; visitors never download it.
 const LiveMode = lazy(() => import("./live-mode"));
 
-const noSubscribe = () => () => {};
-const isFramed = () => window.self !== window.top;
-const notFramed = () => false;
-
 export function Preview() {
-  const framed = useSyncExternalStore(noSubscribe, isFramed, notFramed);
-  return framed ? (
+  return useInStudio() ? (
     <Suspense fallback={null}>
       <LiveMode />
     </Suspense>
