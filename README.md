@@ -13,7 +13,7 @@ Why Sanity: nothing to host or patch (Payload needs its own server and Postgres)
 
 Why this and not Cloudflare Workers or a container: the zone lives in a Cloudflare account where we cannot deploy Workers, and the site needs no server. GitHub Pages is how the current exodusgaming.io is already hosted (`exodusgaming-io/website`), so it adds no new infrastructure. Pages on our GitHub plan needs a public repository, so nothing secret goes into this repo: keys live in Actions secrets.
 
-What a static export cannot do (Next.js docs, "Static Exports — Unsupported Features"): redirects, headers, draft mode, ISR, image optimization. Redirects are pages written at build (see "Redirects" below) until the domain switch moves them to Cloudflare rules; CMS draft preview needs a separate runtime and is decided with the CMS.
+What a static export cannot do (Next.js docs, "Static Exports — Unsupported Features"): redirects, headers, draft mode, ISR, image optimization. Redirects are pages written at build (see "Redirects" below) until the domain switch moves them to Cloudflare rules; draft preview runs through the Studio (see "Draft preview" below), so it needs no Next.js draft mode.
 
 ## Environments
 
@@ -44,12 +44,18 @@ A bad redirect never fails the build; the script skips it with a warning in the 
 
 A `from` ending in `.html` becomes that file; any other `from` (`/old`, `/old/`, `/deck.pdf`) becomes `…/index.html`, which GitHub Pages serves at `/old/` and reaches from `/old` with its own 301.
 
+### Draft preview
+
+In the Studio, **Preview** (the Presentation tool) shows the staging site with the editor's unpublished changes as they type. The site is static, so the drafts come from the Studio itself: it runs the page's queries with the editor's session and passes the results into the framed page (`app/preview/`). The site holds no token, and visitors never load this code: it loads only when the page is framed.
+
+A page previews drafts only for content it reads through `useQuery` from `@sanity/react-loader` with the build-time data as `initial` (today: Site settings on the home page, `app/home-content.tsx`). New templates should read content the same way and get a location in `presentationTool` (`studio/sanity.config.ts`).
+
 The Studio lives in `studio/` with its own `package.json`:
 
 ```bash
 cd studio
 npm ci
-npm run dev       # http://localhost:3333
+npm run dev       # http://localhost:3333; SANITY_STUDIO_PREVIEW_URL=http://localhost:3000 previews a local site
 npm run lint && npm run typecheck   # also run on every PR
 npm run deploy    # rebuilds and publishes https://exodusgaming.sanity.studio
 ```

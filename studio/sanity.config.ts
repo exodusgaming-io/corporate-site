@@ -1,8 +1,13 @@
 import {defineConfig, defineSingleton} from 'sanity'
+import {defineLocations, presentationTool} from 'sanity/presentation'
 import {structureTool} from 'sanity/structure'
 import {visionTool} from '@sanity/vision'
 import {schemaTypes} from './schemaTypes'
 import {structure} from './structure'
+
+// The site shown in the Preview tool. Drafts reach it through the Studio, so the static
+// staging build works as is. For local work: SANITY_STUDIO_PREVIEW_URL=http://localhost:3000
+const previewUrl = process.env.SANITY_STUDIO_PREVIEW_URL || 'https://staging.exodusgaming.io'
 
 export default defineConfig({
   name: 'default',
@@ -21,7 +26,19 @@ export default defineConfig({
     ],
   },
 
-  plugins: [structureTool({structure}), visionTool()],
+  plugins: [
+    structureTool({structure}),
+    presentationTool({
+      title: 'Preview',
+      previewUrl,
+      resolve: {
+        locations: {
+          siteSettings: defineLocations({locations: [{title: 'Home', href: '/'}]}),
+        },
+      },
+    }),
+    visionTool(),
+  ],
 
   schema: {
     types: schemaTypes,
