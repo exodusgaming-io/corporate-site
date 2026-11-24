@@ -13,7 +13,7 @@ Why Sanity: nothing to host or patch (Payload needs its own server and Postgres)
 
 Why this and not Cloudflare Workers or a container: the zone lives in a Cloudflare account where we cannot deploy Workers, and the site needs no server. GitHub Pages is how the current exodusgaming.io is already hosted (`exodusgaming-io/website`), so it adds no new infrastructure. Pages on our GitHub plan needs a public repository, so nothing secret goes into this repo: keys live in Actions secrets.
 
-What a static export cannot do (Next.js docs, "Static Exports — Unsupported Features"): redirects, headers, draft mode, ISR, image optimization. Redirects are pages written at build (see "Redirects" below) until the domain switch moves them to Cloudflare rules; CMS draft preview needs a separate runtime and is decided with the CMS.
+What a static export cannot do (Next.js docs, "Static Exports — Unsupported Features"): redirects, headers, draft mode, ISR, image optimization. Redirects are pages written at build (see "Redirects" below) until the domain switch moves them to Cloudflare rules; draft preview runs through the Studio (see "Draft preview" below), so it needs no Next.js draft mode.
 
 ## Environments
 
@@ -44,12 +44,23 @@ A bad redirect never fails the build; the script skips it with a warning in the 
 
 A `from` ending in `.html` becomes that file; any other `from` (`/old`, `/old/`, `/deck.pdf`) becomes `…/index.html`, which GitHub Pages serves at `/old/` and reaches from `/old` with its own 301.
 
+### Draft preview
+
+In the Studio, **Preview** (the Presentation tool) shows the staging site with the editor's unpublished changes as they type. The site is static, so the drafts come from the Studio itself: it runs the page's queries with the editor's session and passes the results into the page (`app/preview/`). The site holds no token. Visitors get the build-time HTML and none of the Sanity or preview code: it loads only when the page runs inside the Studio (framed, or in a tab opened with "Open preview").
+
+How a page joins preview (the home page is the example):
+- a plain view component renders the data (`app/home-view.tsx`);
+- a client wrapper renders that view with the build-time data, and inside the Studio lazy-loads the live version (`app/home-content.tsx`);
+- the live version reads the same query through `useQuery` from `@sanity/react-loader` with the build-time data as `initial` (`app/home-live.tsx`);
+- queries and types live in `lib/queries.ts`; never import `lib/sanity.ts` from code every visitor loads, it would ship the Sanity client;
+- the document type gets a location in `presentationTool` (`studio/sanity.config.ts`).
+
 The Studio lives in `studio/` with its own `package.json`:
 
 ```bash
 cd studio
 npm ci
-npm run dev       # http://localhost:3333
+npm run dev       # http://localhost:3333; SANITY_STUDIO_PREVIEW_URL=http://localhost:3000 previews a local site
 npm run lint && npm run typecheck   # also run on every PR
 npm run deploy    # rebuilds and publishes https://exodusgaming.sanity.studio
 ```

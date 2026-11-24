@@ -1,8 +1,13 @@
 import { createClient } from "@sanity/client";
+import type { QueryResponseInitial } from "@sanity/react-loader";
+import { SITE_SETTINGS_QUERY, type SiteSettings } from "./queries.ts";
 
-// Read at build time only (static export). The dataset is public, so no token:
-// only published documents are visible.
-const sanity = createClient({
+// Used at build time (static export) and by the preview bridge (app/preview/live-mode.tsx),
+// which loads only inside the Studio. Never import this module from a component every
+// visitor loads: it would ship the Sanity client to them; use lib/queries.ts there.
+// The dataset is public, so no token: only published documents are visible here. Drafts
+// reach the preview through the Studio, which runs the queries with the editor's session.
+export const sanity = createClient({
   projectId: "a1r4gwxv",
   dataset: "production",
   apiVersion: "2026-11-20",
@@ -11,11 +16,6 @@ const sanity = createClient({
   perspective: "published",
 });
 
-export type SiteSettings = {
-  title: string | null;
-  tagline: string | null;
-};
-
 export type Redirect = {
   from: string;
   to: string;
@@ -23,10 +23,9 @@ export type Redirect = {
 
 // A failed request fails the build, so a Sanity outage keeps the last deploy
 // live instead of publishing a page without content.
-export function getSiteSettings(): Promise<SiteSettings | null> {
-  return sanity.fetch<SiteSettings | null>(
-    `*[_id == "siteSettings"][0]{title, tagline}`,
-  );
+export async function loadSiteSettings(): Promise<QueryResponseInitial<SiteSettings | null>> {
+  const data = await sanity.fetch<SiteSettings | null>(SITE_SETTINGS_QUERY);
+  return { data, sourceMap: undefined, perspective: "published" };
 }
 
 export function getRedirects(): Promise<Redirect[]> {
