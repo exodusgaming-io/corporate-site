@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { site } from "@/content/site";
 import { indexable } from "@/lib/indexing";
-import { Preview } from "./preview/preview";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Exodus Gaming",
-  description: "Exodus Gaming — iGaming platform.",
+  title: site.title,
+  description: site.description,
   robots: indexable ? undefined : { index: false, follow: false },
 };
 
@@ -26,10 +26,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
-        {children}
-        <Preview />
-      </body>
+      <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );
 }

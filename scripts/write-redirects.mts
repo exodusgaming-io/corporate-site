@@ -1,16 +1,14 @@
-// Runs after `next build`: writes a redirect page into out/ for every Redirect
-// document in Sanity. GitHub Pages cannot answer with a real 301; an instant meta
+// Runs after `next build`: writes a redirect page into out/ for every entry in
+// content/redirects.ts. GitHub Pages cannot answer with a real 301; an instant meta
 // refresh is what search engines treat as a permanent redirect. Real 301s move to
 // Cloudflare at the domain switch (#6545).
 //
-// A bad document never fails the build (that would stop every publish until it is
-// fixed): it is skipped with a warning. A failed request to Sanity still fails it.
+// Any bad entry fails the build, so the PR check catches it before merge.
 import { mkdir, stat, writeFile } from "node:fs/promises";
-import { dirname, join } from "node:path";
-import { getRedirects } from "../lib/sanity.ts";
+import { dirname, join, relative, sep } from "node:path";
+import { redirects } from "../content/redirects.ts";
 
 const OUT = "out";
-// Keep in step with the Redirect schema in studio/schemaTypes/redirect.ts.
 const PATH = /^\/(?!\/)[^\s?#\\]*$/;
 
 // Path without query, hash, index.html or trailing slash: /a/ = /a = /a/index.html = /a?x#y.
@@ -80,9 +78,6 @@ async function isFile(path: string): Promise<boolean> {
   }
 }
 
-const redirects = await getRedirects();
-const written = new Set<string>();
-
 // Where each site path sends visitors, to catch /a -> /a/#x and /a -> /b -> /a.
 const next = new Map<string, string>();
 for (const { from, to } of redirects) {
@@ -99,34 +94,59 @@ function loops(from: string): boolean {
   return false;
 }
 
+// The folders a file needs inside out/: out/a/b/index.html -> out/a, out/a/b.
+function foldersOf(file: string): string[] {
+  const parts = relative(OUT, dirname(file)).split(sep).filter(Boolean);
+  return parts.map((_, i) => join(OUT, ...parts.slice(0, i + 1)));
+}
+
+const problems: string[] = [];
+const pages = new Map<string, { from: string; target: string }>();
+const plannedFolders = new Map<string, string>(); // folder -> the redirect that needs it
+
 for (const { from, to } of redirects) {
   const segments = segmentsOf(from);
   const target = targetFor(to);
   if (!segments || !target) {
-    console.warn(`redirects: skipped ${from} -> ${to}: not a valid path or address`);
+    problems.push(`${from} -> ${to}: not a valid path or address`);
     continue;
   }
   if (loops(from)) {
-    console.warn(`redirects: skipped ${from} -> ${to}: ends in a redirect loop`);
+    problems.push(`${from} -> ${to}: ends in a redirect loop`);
     continue;
   }
   const file = fileFor(from, segments);
-  if (written.has(file)) {
-    console.warn(`redirects: skipped ${from}: another redirect already starts there`);
-    continue;
-  }
-  // A page at this path, or a file where the folder would go (/robots.txt).
-  if ((await isFile(file)) || (await isFile(join(OUT, ...segments)))) {
-    console.warn(`redirects: skipped ${from}: a page exists at this path`);
-    continue;
-  }
-  try {
-    await mkdir(dirname(file), { recursive: true });
-    await writeFile(file, page(target));
-    written.add(file);
-  } catch (error) {
-    console.warn(`redirects: skipped ${from}: ${(error as Error).message}`);
+  const folders = foldersOf(file);
+  if (pages.has(file)) {
+    problems.push(`${from}: another redirect already starts there`);
+  } else if (plannedFolders.has(file) || folders.some((f) => pages.has(f))) {
+    const other = plannedFolders.get(file) ?? pages.get(folders.find((f) => pages.has(f))!)!.from;
+    problems.push(`${from}: clashes with the redirect from ${other}`);
+  } else if (await isFile(file)) {
+    problems.push(`${from}: a page exists at this path`);
+  } else if ((await Promise.all(folders.map(isFile))).some(Boolean)) {
+    problems.push(`${from}: a file exists where its folder would go (/robots.txt/…)`);
+  } else {
+    pages.set(file, { from, target });
+    for (const folder of folders) plannedFolders.set(folder, from);
   }
 }
 
-console.log(`redirects: wrote ${written.size} of ${redirects.length}`);
+function fail(lines: string[]): never {
+  for (const line of lines) console.error(`redirects: ${line}`);
+  console.error("redirects: fix content/redirects.ts");
+  process.exit(1);
+}
+
+if (problems.length > 0) fail(problems);
+
+for (const [file, { from, target }] of pages) {
+  try {
+    await mkdir(dirname(file), { recursive: true });
+    await writeFile(file, page(target));
+  } catch (error) {
+    fail([`${from}: ${(error as Error).message}`]);
+  }
+}
+
+console.log(`redirects: wrote ${pages.size}`);
