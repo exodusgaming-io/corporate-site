@@ -4,10 +4,11 @@ import { Fragment } from "react";
 export type Crumb = { label: string; href?: string };
 
 // Path above a detail-page title. The last crumb is the current page (no link, red diamond).
+// Below md, wrapped lines sit 44px apart so the links' tap areas don't overlap.
 export function Breadcrumbs({ items }: { items: Crumb[] }) {
   return (
     <nav aria-label="Breadcrumb">
-      <ol className="flex flex-wrap items-center gap-x-2.5 gap-y-2 text-eyebrow uppercase">
+      <ol className="flex flex-wrap items-center gap-x-2.5 gap-y-8 text-eyebrow uppercase md:gap-y-2">
         {items.map((item, i) => {
           const last = i === items.length - 1;
           return (
