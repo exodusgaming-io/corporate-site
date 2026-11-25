@@ -23,6 +23,11 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci
+      # General Sans is downloaded at build (scripts/fetch-fonts.mts); keep it between runs.
+      - uses: actions/cache@v6
+        with:
+          path: app/fonts/general-sans
+          key: general-sans-${{ hashFiles('scripts/fetch-fonts.mts') }}
       - run: npm run lint
       - run: npm run build
         env:

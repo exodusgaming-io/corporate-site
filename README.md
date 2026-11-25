@@ -31,6 +31,7 @@ Everything the site says lives in `content/`; pages import it. To change copy or
 | File | What |
 |---|---|
 | `content/site.ts` | site title, tagline and meta description |
+| `content/navigation.ts` | header, menu and footer links, contact email |
 | `content/redirects.ts` | redirects (below) |
 
 ### Redirects
@@ -41,11 +42,28 @@ The build fails, naming the entry, when a path or address is not valid (only sit
 
 A `from` ending in `.html` becomes that file; any other `from` (`/old`, `/old/`, `/deck.pdf`) becomes `…/index.html`, which GitHub Pages serves at `/old/` and reaches from `/old` with its own 301.
 
+## Design system
+
+Built from the Claude Design mockups (Daria, Nov 2026) and the Style Book; #6541. Every token and component is on
+https://staging.exodusgaming.io/styleguide/ (never indexed, not linked from the site).
+
+- **Tokens** — `app/globals.css`. Brand colours, type scale, radii, gutter and section spacing as Tailwind 4 theme
+  variables; Tailwind's default palette and sizes are cleared, so `bg-onyx`, `text-display`, `rounded-xl`, `px-gutter`
+  exist and `bg-zinc-500` doesn't.
+- **Dark and light sections** — a section sets `data-tone="dark"` or `"light"`, and `text-fg`, `text-fg-soft`,
+  `text-accent`, `border-line` and the button colours follow. Use those inside components, not fixed colours.
+- **Components** — `components/ui` (buttons, section, eyebrow, dialog), `components/blocks` (heroes, cards, grids,
+  quote, FAQ…), `components/forms`, `components/site` (header, menu, Book a demo drawer, footer, cookie banner).
+  Any link to `#demo` opens the Book a demo drawer.
+- **Fonts** — self-hosted, see `app/fonts/README.md`. General Sans is downloaded at build (`scripts/fetch-fonts.mts`)
+  because its licence doesn't allow publishing the file in a public repository.
+- **Motion** — the animated hero gradient and every transition stop under `prefers-reduced-motion`.
+
 ## Develop
 
 ```bash
 npm ci
-npm run dev      # http://localhost:3000
+npm run dev      # http://localhost:3000; downloads General Sans on first run
 npm run build    # static site in out/
 npm run lint
 ```

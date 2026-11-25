@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="ui-monospace, Menlo, monospace">
+  <rect width="1600" height="900" fill="#131111"/>
+  <rect width="240" height="900" fill="#0b0a0a"/>
+  <rect x="32" y="36" width="120" height="16" rx="4" fill="#f0f4f5"/>
+  <g fill="#282322">
+    <rect x="32" y="110" width="176" height="12" rx="4"/>
+    <rect x="32" y="150" width="140" height="12" rx="4"/>
+    <rect x="32" y="190" width="160" height="12" rx="4"/>
+    <rect x="32" y="230" width="120" height="12" rx="4"/>
+    <rect x="32" y="270" width="150" height="12" rx="4"/>
+  </g>
+  <rect x="24" y="142" width="192" height="28" rx="6" fill="#3b0001"/>
+  <rect x="32" y="150" width="140" height="12" rx="4" fill="#ef4643"/>
+  <rect x="288" y="36" width="360" height="22" rx="4" fill="#f0f4f5"/>
+  <g fill="#191615" stroke="#282322">
+    <rect x="288" y="96" width="400" height="160" rx="16"/>
+    <rect x="712" y="96" width="400" height="160" rx="16"/>
+    <rect x="1136" y="96" width="416" height="160" rx="16"/>
+    <rect x="288" y="288" width="824" height="560" rx="16"/>
+    <rect x="1136" y="288" width="416" height="560" rx="16"/>
+  </g>
+  <g fill="#f0f4f5">
+    <rect x="320" y="176" width="180" height="40" rx="6"/>
+    <rect x="744" y="176" width="140" height="40" rx="6"/>
+    <rect x="1168" y="176" width="200" height="40" rx="6"/>
+  </g>
+  <g fill="#8f8a89">
+    <rect x="320" y="128" width="120" height="12" rx="4"/>
+    <rect x="744" y="128" width="100" height="12" rx="4"/>
+    <rect x="1168" y="128" width="140" height="12" rx="4"/>
+  </g>
+  <polyline points="320,780 420,700 520,730 620,620 720,660 820,540 920,580 1020,460 1080,480" fill="none" stroke="#f7130e" stroke-width="4"/>
+  <g fill="#282322">
+    <rect x="1168" y="328" width="352" height="14" rx="4"/>
+    <rect x="1168" y="380" width="300" height="14" rx="4"/>
+    <rect x="1168" y="432" width="330" height="14" rx="4"/>
+    <rect x="1168" y="484" width="280" height="14" rx="4"/>
+    <rect x="1168" y="536" width="320" height="14" rx="4"/>
+  </g>
+  <text x="800" y="880" fill="#8f8a89" font-size="18" text-anchor="middle" letter-spacing="1">BACK-OFFICE SCREENSHOT — PLACEHOLDER</text>
+</svg>
