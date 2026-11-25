@@ -19,7 +19,8 @@ export function Breadcrumbs({ items }: { items: Crumb[] }) {
                     {item.label}
                   </span>
                 ) : (
-                  <Link href={item.href} className="text-fg-soft transition-colors hover:text-fg">
+                  // -my-4 py-4: a 44px tap area without moving the line.
+                  <Link href={item.href} className="-my-4 inline-block py-4 text-fg-soft transition-colors hover:text-fg">
                     {item.label}
                   </Link>
                 )}

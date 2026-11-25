@@ -18,7 +18,7 @@ const variants: Record<Variant, string> = {
   accent: "bg-pure-red text-onyx hover:bg-cinnabar disabled:bg-disabled",
 };
 
-// sm is 40px in the mockup header; 44px on touch screens.
+// sm is 40px in the mockup header; 44px below md (768px) for fingers.
 const sizes: Record<Size, string> = {
   sm: "h-11 px-[18px] text-nav md:h-10",
   md: "h-12 px-6 text-small",

@@ -179,7 +179,8 @@ export function Checkbox({ name, id = name, label, error, className, ...input }:
         <span>{label}</span>
       </label>
       {error && (
-        <p id={messageId} className="text-nav text-cinnabar">
+        // Pulled up under the label text: the label's tap padding would otherwise push it towards the next row.
+        <p id={messageId} className="-mt-3 pb-2 pl-8 text-nav text-cinnabar">
           {error}
         </p>
       )}

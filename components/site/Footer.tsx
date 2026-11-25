@@ -3,7 +3,7 @@ import Link from "next/link";
 import { companyGroup, contactEmail, productGroups, socialLinks, type NavGroup } from "@/content/navigation";
 
 function FooterGroup({ group }: { group: NavGroup }) {
-  // Links are 44px tall on touch screens and keep the mockup's spacing from md up.
+  // Links are 44px tall below md (768px) for fingers and keep the mockup's spacing from md up.
   const title = "inline-flex min-h-11 items-center self-start text-eyebrow text-fg-muted uppercase md:mb-1.5 md:min-h-0";
   return (
     <nav aria-label={group.title} className="flex flex-col md:gap-3">
