@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# General Sans: fetched at build, its licence forbids publishing it here (app/fonts/README.md)
+/app/fonts/general-sans/
