@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: site.title,
-  description: "Exodus Gaming — iGaming platform.",
+  description: site.description,
   robots: indexable ? undefined : { index: false, follow: false },
 };
 

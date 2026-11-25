@@ -30,14 +30,14 @@ Everything the site says lives in `content/`; pages import it. To change copy or
 
 | File | What |
 |---|---|
-| `content/site.ts` | site title and tagline |
+| `content/site.ts` | site title, tagline and meta description |
 | `content/redirects.ts` | redirects (below) |
 
 ### Redirects
 
 Add `{ from: "/old-path", to: "/new-path" }` (or `to: "https://…"`) to `content/redirects.ts`. After `next build`, `scripts/write-redirects.mts` writes a page at each `from` path that sends visitors on at once (meta refresh + `location.replace`, with a canonical link). GitHub Pages cannot answer with a real 301; search engines treat an instant meta refresh as a permanent redirect. At the domain switch (#6545) redirects move to Cloudflare rules for real 301s.
 
-The build fails, naming the entry, when a path or address is not valid (only site paths and http(s) addresses), when a redirect leads back to itself (`/a` → `/a/#x`, or `/a` → `/b` → `/a`), when two redirects start at the same path, or when a page already exists there.
+The build fails, naming the entry, when a path or address is not valid (only site paths and http(s) addresses), when a redirect leads back to itself (`/a` → `/a/#x`, or `/a` → `/b` → `/a`), when two redirects start at the same path or clash (`/old.html` and `/old.html/`), or when a page or file already exists there.
 
 A `from` ending in `.html` becomes that file; any other `from` (`/old`, `/old/`, `/deck.pdf`) becomes `…/index.html`, which GitHub Pages serves at `/old/` and reaches from `/old` with its own 301.
 

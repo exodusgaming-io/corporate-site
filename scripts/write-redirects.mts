@@ -5,7 +5,7 @@
 //
 // Any bad entry fails the build, so the PR check catches it before merge.
 import { mkdir, stat, writeFile } from "node:fs/promises";
-import { dirname, join } from "node:path";
+import { dirname, join, relative, sep } from "node:path";
 import { redirects } from "../content/redirects.ts";
 
 const OUT = "out";
@@ -94,38 +94,58 @@ function loops(from: string): boolean {
   return false;
 }
 
+// The folders a file needs inside out/: out/a/b/index.html -> out/a, out/a/b.
+function foldersOf(file: string): string[] {
+  const parts = relative(OUT, dirname(file)).split(sep).filter(Boolean);
+  return parts.map((_, i) => join(OUT, ...parts.slice(0, i + 1)));
+}
+
 const problems: string[] = [];
-const pages = new Map<string, string>();
+const pages = new Map<string, { from: string; target: string }>();
+const plannedFolders = new Set<string>();
 
 for (const { from, to } of redirects) {
   const segments = segmentsOf(from);
   const target = targetFor(to);
   if (!segments || !target) {
     problems.push(`${from} -> ${to}: not a valid path or address`);
-  } else if (loops(from)) {
+    continue;
+  }
+  if (loops(from)) {
     problems.push(`${from} -> ${to}: ends in a redirect loop`);
+    continue;
+  }
+  const file = fileFor(from, segments);
+  const folders = foldersOf(file);
+  if (pages.has(file)) {
+    problems.push(`${from}: another redirect already starts there`);
+  } else if (plannedFolders.has(file) || folders.some((f) => pages.has(f))) {
+    problems.push(`${from}: clashes with another redirect (/old.html and /old.html/)`);
+  } else if (await isFile(file)) {
+    problems.push(`${from}: a page exists at this path`);
+  } else if ((await Promise.all(folders.map(isFile))).some(Boolean)) {
+    problems.push(`${from}: a file exists where its folder would go (/robots.txt/…)`);
   } else {
-    const file = fileFor(from, segments);
-    if (pages.has(file)) {
-      problems.push(`${from}: another redirect already starts there`);
-    } else if ((await isFile(file)) || (await isFile(join(OUT, ...segments)))) {
-      // A page at this path, or a file where the folder would go (/robots.txt).
-      problems.push(`${from}: a page exists at this path`);
-    } else {
-      pages.set(file, target);
-    }
+    pages.set(file, { from, target });
+    for (const folder of folders) plannedFolders.add(folder);
   }
 }
 
-if (problems.length > 0) {
-  for (const problem of problems) console.error(`redirects: ${problem}`);
+function fail(lines: string[]): never {
+  for (const line of lines) console.error(`redirects: ${line}`);
   console.error("redirects: fix content/redirects.ts");
   process.exit(1);
 }
 
-for (const [file, target] of pages) {
-  await mkdir(dirname(file), { recursive: true });
-  await writeFile(file, page(target));
+if (problems.length > 0) fail(problems);
+
+for (const [file, { from, target }] of pages) {
+  try {
+    await mkdir(dirname(file), { recursive: true });
+    await writeFile(file, page(target));
+  } catch (error) {
+    fail([`${from}: ${(error as Error).message}`]);
+  }
 }
 
 console.log(`redirects: wrote ${pages.size}`);
