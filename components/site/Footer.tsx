@@ -19,7 +19,7 @@ function FooterGroup({ group }: { group: NavGroup }) {
           <li key={link.href}>
             <Link
               href={link.href}
-              className="inline-flex min-h-11 items-center text-small leading-[1.3] text-fg-soft transition-colors hover:text-fg md:min-h-0"
+              className="flex min-h-11 w-fit items-center text-small leading-[1.3] text-fg-soft transition-colors hover:text-fg md:min-h-0"
             >
               {link.label}
             </Link>
@@ -57,7 +57,7 @@ export function Footer() {
                   href={link.href}
                   target="_blank"
                   rel="noopener"
-                  className="inline-flex min-h-11 items-center text-fg-soft transition-colors hover:text-fg md:min-h-0"
+                  className="flex min-h-11 items-center text-fg-soft transition-colors hover:text-fg md:min-h-0"
                 >
                   {link.label}
                 </a>
