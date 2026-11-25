@@ -102,7 +102,7 @@ function foldersOf(file: string): string[] {
 
 const problems: string[] = [];
 const pages = new Map<string, { from: string; target: string }>();
-const plannedFolders = new Set<string>();
+const plannedFolders = new Map<string, string>(); // folder -> the redirect that needs it
 
 for (const { from, to } of redirects) {
   const segments = segmentsOf(from);
@@ -120,14 +120,15 @@ for (const { from, to } of redirects) {
   if (pages.has(file)) {
     problems.push(`${from}: another redirect already starts there`);
   } else if (plannedFolders.has(file) || folders.some((f) => pages.has(f))) {
-    problems.push(`${from}: clashes with another redirect (/old.html and /old.html/)`);
+    const other = plannedFolders.get(file) ?? pages.get(folders.find((f) => pages.has(f))!)!.from;
+    problems.push(`${from}: clashes with the redirect from ${other}`);
   } else if (await isFile(file)) {
     problems.push(`${from}: a page exists at this path`);
   } else if ((await Promise.all(folders.map(isFile))).some(Boolean)) {
     problems.push(`${from}: a file exists where its folder would go (/robots.txt/…)`);
   } else {
     pages.set(file, { from, target });
-    for (const folder of folders) plannedFolders.add(folder);
+    for (const folder of folders) plannedFolders.set(folder, from);
   }
 }
 
