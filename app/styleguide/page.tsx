@@ -17,7 +17,7 @@ import { CookieBanner, CookieBannerView, ShowCookieBannerButton } from "@/compon
 import { Footer } from "@/components/site/Footer";
 import { Header } from "@/components/site/Header";
 import { ArrowLink } from "@/components/ui/ArrowLink";
-import { Button } from "@/components/ui/Button";
+import { Button, buttonClasses } from "@/components/ui/Button";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Icon } from "@/components/ui/Icon";
 import { iconNames } from "@/components/ui/icon-names";
@@ -536,7 +536,7 @@ export default function StyleGuide() {
                     defaultChecked={["White Label"]}
                   />
                   <TextArea name="message" label="What are you working on?" placeholder="The short version is fine." />
-                  <div className="flex flex-col gap-3">
+                  <div className="flex flex-col">
                     <Checkbox name="consent" label="I agree to the privacy policy." defaultChecked />
                     <Checkbox name="news" label="Send me product news." error="Placeholder error under a checkbox." />
                     <Checkbox name="locked" label="Disabled option" disabled />
@@ -566,11 +566,12 @@ export default function StyleGuide() {
                   Open Book a demo
                 </Button>
                 <ShowCookieBannerButton />
-                <Button href="/styleguide/missing-page/" variant="outline" size="sm">
+                {/* A plain link: through the router it would be prefetched, and this page never exists. */}
+                <a href="/styleguide/missing-page/" className={buttonClasses("outline", "sm")}>
                   Open the 404 page
-                </Button>
+                </a>
               </div>
-              <CookieBannerView />
+              <CookieBannerView label="Cookie consent (sample)" />
             </Specimen>
           </div>
         </Section>

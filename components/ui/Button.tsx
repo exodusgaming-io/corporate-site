@@ -6,7 +6,7 @@ type Variant = "primary" | "outline" | "accent";
 type Size = "sm" | "md" | "lg";
 
 const base =
-  "inline-flex shrink-0 items-center justify-center gap-2.5 rounded-full font-sans leading-none font-medium whitespace-nowrap transition-colors duration-200 disabled:cursor-not-allowed";
+  "inline-flex shrink-0 items-center justify-center gap-2.5 rounded-full font-sans leading-none font-medium whitespace-nowrap transition-[color,background-color,border-color,translate] duration-200 active:translate-y-px disabled:cursor-not-allowed disabled:active:translate-y-0";
 
 // primary: Platinum on dark, Onyx on light sections; turns red on hover with an Onyx label.
 // accent: Pure Red always keeps an Onyx label — Platinum on Pure Red is 3.75:1, large text only.
@@ -25,13 +25,18 @@ const sizes: Record<Size, string> = {
   lg: "h-13 px-7 text-body",
 };
 
+// For links that must not go through the router (e.g. a page that should load fresh).
+export function buttonClasses(variant: Variant = "primary", size: Size = "lg", className?: string) {
+  return cn(base, variants[variant], sizes[size], className);
+}
+
 type Common = { variant?: Variant; size?: Size; className?: string; children: ReactNode };
 type LinkProps = Common & { href: string } & Omit<ComponentProps<"a">, "href" | "className" | "children">;
 type ButtonProps = Common & { href?: undefined } & Omit<ComponentProps<"button">, "className" | "children">;
 
 export function Button(props: LinkProps | ButtonProps) {
   const { variant = "primary", size = "lg", className, children, ...rest } = props;
-  const classes = cn(base, variants[variant], sizes[size], className);
+  const classes = buttonClasses(variant, size, className);
 
   if (rest.href !== undefined) {
     const { href, ...anchor } = rest as LinkProps;

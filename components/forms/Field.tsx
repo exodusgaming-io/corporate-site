@@ -160,7 +160,7 @@ export function Checkbox({ name, id = name, label, error, className, ...input }:
   const messageId = error ? `${id}-message` : undefined;
   return (
     <div className={cn("flex flex-col gap-2", className)}>
-      <label htmlFor={id} className="flex cursor-pointer items-start gap-3 text-small text-silver has-disabled:cursor-not-allowed has-disabled:text-muted">
+      <label htmlFor={id} className="flex cursor-pointer items-start gap-3 py-3 text-small text-silver has-disabled:cursor-not-allowed has-disabled:text-muted">
         <span className="relative mt-px flex size-5 flex-none">
           <input
             id={id}

@@ -96,7 +96,8 @@ export function Swatches() {
 export function ContrastTable() {
   const values = useTokenValues();
   return (
-    <div className="overflow-x-auto rounded-md border border-line">
+    // Scrolls sideways on phones; focusable so keyboard users can scroll it too.
+    <div tabIndex={0} role="region" aria-label="Contrast pairs" className="overflow-x-auto rounded-md border border-line">
       <table className="w-full min-w-[40rem] border-collapse text-left text-small">
         <thead className="bg-surface text-caption text-fg-muted uppercase">
           <tr>

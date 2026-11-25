@@ -17,6 +17,8 @@ type DialogProps = {
 export function Dialog({ open, onClose, label, className, children }: DialogProps) {
   const ref = useRef<HTMLDialogElement>(null);
   const returnFocus = useRef<HTMLElement | null>(null);
+  // Where the press started: a text selection dragged out onto the backdrop must not close the dialog.
+  const pressedBackdrop = useRef(false);
 
   useEffect(() => {
     const dialog = ref.current;
@@ -37,8 +39,11 @@ export function Dialog({ open, onClose, label, className, children }: DialogProp
         onClose();
         returnFocus.current?.focus();
       }}
+      onPointerDown={(event) => {
+        pressedBackdrop.current = event.target === event.currentTarget;
+      }}
       onClick={(event) => {
-        if (event.target === event.currentTarget) event.currentTarget.close();
+        if (pressedBackdrop.current && event.target === event.currentTarget) event.currentTarget.close();
       }}
       className={cn(
         "m-0 max-h-none max-w-none p-0 text-fg backdrop:bg-onyx/66",

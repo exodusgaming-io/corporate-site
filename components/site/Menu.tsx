@@ -48,14 +48,20 @@ export function Menu({ open, onClose }: { open: boolean; onClose: () => void }) 
           </nav>
           <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,170px),1fr))] content-start gap-x-8 gap-y-10 pt-3">
             {productGroups.map((group) => (
-              <nav key={group.title} aria-label={group.title} className="flex flex-col gap-3.5">
-                <Link href={group.href ?? "/"} className="text-eyebrow text-accent uppercase">
+              <nav key={group.title} aria-label={group.title} className="flex flex-col md:gap-3.5">
+                <Link
+                  href={group.href ?? "/"}
+                  className="inline-flex min-h-11 items-center self-start text-eyebrow text-accent uppercase md:min-h-0"
+                >
                   {group.title}
                 </Link>
-                <ul className="flex flex-col gap-3.5">
+                <ul className="flex flex-col md:gap-3.5">
                   {group.links.map((link) => (
                     <li key={link.href}>
-                      <Link href={link.href} className="text-body leading-[1.3] text-fg-soft transition-colors hover:text-fg">
+                      <Link
+                        href={link.href}
+                        className="inline-flex min-h-11 items-center text-body leading-[1.3] text-fg-soft transition-colors hover:text-fg md:min-h-0"
+                      >
                         {link.label}
                       </Link>
                     </li>
@@ -66,7 +72,10 @@ export function Menu({ open, onClose }: { open: boolean; onClose: () => void }) 
           </div>
         </div>
         <div className="relative mx-auto flex w-full max-w-page flex-wrap items-center justify-between gap-5 pt-10">
-          <a href={`mailto:${contactEmail}`} className="text-body text-fg-soft transition-colors hover:text-fg">
+          <a
+            href={`mailto:${contactEmail}`}
+            className="inline-flex min-h-11 items-center text-body text-fg-soft transition-colors hover:text-fg"
+          >
             {contactEmail}
           </a>
           <Button href="#demo" size="md">

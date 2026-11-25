@@ -38,13 +38,13 @@ export function useConsent(): Consent | "unset" | "pending" {
   return useSyncExternalStore(subscribe, readConsent, () => "pending");
 }
 
-type ViewProps = { onAccept?: () => void; onReject?: () => void; className?: string };
+type ViewProps = { onAccept?: () => void; onReject?: () => void; label?: string; className?: string };
 
 // The card on its own, for the style guide.
-export function CookieBannerView({ onAccept, onReject, className }: ViewProps) {
+export function CookieBannerView({ onAccept, onReject, label = "Cookie consent", className }: ViewProps) {
   return (
     <section
-      aria-label="Cookie consent"
+      aria-label={label}
       data-tone="dark"
       className={cn(
         "flex w-full max-w-[28rem] flex-col gap-5 rounded-lg border border-line bg-surface p-6 text-fg",

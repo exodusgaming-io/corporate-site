@@ -5,8 +5,12 @@ import { createHash } from "node:crypto";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname } from "node:path";
 
-const CSS_URL = "https://api.fontshare.com/v2/css?f[]=general-sans@1&display=swap";
+// The exact file we checked (variable, weight 200–700, 38 KB). The path names one version, so a new release
+// on Fontshare doesn't change our build. To update, take the woff2 URL from CSS_URL, check it, change both.
+const FONT_URL =
+  "https://cdn.fontshare.com/wf/LHQJ5KSAL7VGAEIDSTEXCCOIUKFLT2I6/GW57XUEG4ZBVMLZZTQZTGYPROITRRQ5W/JA3IZUEMJ2J6WWT2OQVJOAWDXO3YL4YG.woff2";
 const SHA256 = "49d3fbd2f1bcc9850d8d939cabf107d6ade508ce08419fca466b06879e4a0a8e";
+const CSS_URL = "https://api.fontshare.com/v2/css?f[]=general-sans@1&display=swap";
 const TARGET = "app/fonts/general-sans/GeneralSans-Variable.woff2";
 
 const sha256 = (data: Uint8Array) => createHash("sha256").update(data).digest("hex");
@@ -25,16 +29,10 @@ async function get(url: string): Promise<Response> {
 const existing = await readFile(TARGET).catch(() => null);
 if (existing && sha256(existing) === SHA256) process.exit(0);
 
-// The CSS API names the current file; the CDN path is opaque and may change between versions.
-const css = await (await get(CSS_URL)).text();
-const match = css.match(/url\(['"]?([^'")]+\.woff2)['"]?\)/);
-if (!match) fail(`no woff2 in ${CSS_URL}`);
-const fontUrl = new URL(match[1], "https://cdn.fontshare.com").href;
-
-const font = new Uint8Array(await (await get(fontUrl)).arrayBuffer());
+const font = new Uint8Array(await (await get(FONT_URL)).arrayBuffer());
 const actual = sha256(font);
 if (actual !== SHA256) {
-  fail(`General Sans checksum changed (${actual}). Check the new file from ${fontUrl}, then update SHA256 in scripts/fetch-fonts.mts`);
+  fail(`General Sans at ${FONT_URL} has changed (${actual}). Find the current file in ${CSS_URL}, check it, then update FONT_URL and SHA256 in scripts/fetch-fonts.mts`);
 }
 
 await mkdir(dirname(TARGET), { recursive: true });

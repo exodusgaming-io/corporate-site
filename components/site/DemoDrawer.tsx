@@ -9,15 +9,28 @@ export function DemoDrawer() {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
+    // A click on any #demo link opens the panel without touching the URL or the history.
+    const onClick = (event: MouseEvent) => {
+      if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+        return;
+      }
+      if (!(event.target as Element | null)?.closest?.('a[href="#demo"]')) return;
+      event.preventDefault();
+      setOpen(true);
+    };
+    // Arriving with #demo in the address (a shared link) opens it too; the hash is then dropped.
     const onHash = () => {
       if (window.location.hash !== "#demo") return;
       setOpen(true);
-      // Drop the hash so the next click on #demo fires hashchange again.
       history.replaceState(history.state, "", window.location.pathname + window.location.search);
     };
     onHash();
+    document.addEventListener("click", onClick);
     window.addEventListener("hashchange", onHash);
-    return () => window.removeEventListener("hashchange", onHash);
+    return () => {
+      document.removeEventListener("click", onClick);
+      window.removeEventListener("hashchange", onHash);
+    };
   }, []);
 
   return (

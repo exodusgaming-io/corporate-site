@@ -19,4 +19,6 @@ repository (section 02), and this repo is public. `scripts/fetch-fonts.mts` down
 before `npm run dev` and `npm run build`, checks its SHA-256 and puts it in `app/fonts/general-sans/` (ignored by git).
 The licence also forbids subsetting or converting the file, so it is used exactly as Fontshare serves it.
 
-If Fontshare ships a new version, the build stops on the checksum. Check the new file, then update `SHA256` in the script.
+The script pins one file on Fontshare's CDN, so a new release doesn't change the build; CI caches it between runs.
+To move to a new version, take the woff2 URL from Fontshare's CSS (link in the script), check it, then update
+`FONT_URL` and `SHA256`.

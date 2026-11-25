@@ -3,9 +3,10 @@ import Link from "next/link";
 import { companyGroup, contactEmail, productGroups, socialLinks, type NavGroup } from "@/content/navigation";
 
 function FooterGroup({ group }: { group: NavGroup }) {
-  const title = "mb-1.5 text-eyebrow text-fg-muted uppercase";
+  // Links are 44px tall on touch screens and keep the mockup's spacing from md up.
+  const title = "inline-flex min-h-11 items-center self-start text-eyebrow text-fg-muted uppercase md:mb-1.5 md:min-h-0";
   return (
-    <nav aria-label={group.title} className="flex flex-col gap-3">
+    <nav aria-label={group.title} className="flex flex-col md:gap-3">
       {group.href ? (
         <Link href={group.href} className={`${title} transition-colors hover:text-fg`}>
           {group.title}
@@ -13,10 +14,13 @@ function FooterGroup({ group }: { group: NavGroup }) {
       ) : (
         <span className={title}>{group.title}</span>
       )}
-      <ul className="flex flex-col gap-3">
+      <ul className="flex flex-col md:gap-3">
         {group.links.map((link) => (
           <li key={link.href}>
-            <Link href={link.href} className="text-small leading-[1.3] text-fg-soft transition-colors hover:text-fg">
+            <Link
+              href={link.href}
+              className="inline-flex min-h-11 items-center text-small leading-[1.3] text-fg-soft transition-colors hover:text-fg md:min-h-0"
+            >
               {link.label}
             </Link>
           </li>
@@ -35,7 +39,7 @@ export function Footer() {
           <div className="flex flex-col gap-4.5">
             <Image src="/brand/exodus-mark.svg" alt="" width={36} height={36} />
             <p className="max-w-60 text-small text-fg-soft">Platform provider for casino, sweepstakes and sportsbook brands.</p>
-            <a href={`mailto:${contactEmail}`} className="text-small leading-none font-medium transition-colors hover:text-accent">
+            <a href={`mailto:${contactEmail}`} className="inline-flex min-h-11 items-center self-start text-small leading-none font-medium transition-colors hover:text-accent md:min-h-0">
               {contactEmail}
             </a>
           </div>
@@ -49,7 +53,12 @@ export function Footer() {
           <ul className="flex gap-6">
             {socialLinks.map((link) => (
               <li key={link.label}>
-                <a href={link.href} target="_blank" rel="noopener" className="text-fg-soft transition-colors hover:text-fg">
+                <a
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener"
+                  className="inline-flex min-h-11 items-center text-fg-soft transition-colors hover:text-fg md:min-h-0"
+                >
                   {link.label}
                 </a>
               </li>
