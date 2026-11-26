@@ -40,7 +40,7 @@ Everything the site says lives in `content/`; pages are built from it. To change
 
 ### Pages and sections
 
-A page is a hero plus a list of sections (`sections: [...]`). Each section has a `type` (`cards`, `faq`, `callout`, `steps`…, all listed in `content/types.ts`) and its own fields; `components/sections/` has one component per type. Add, remove or reorder sections in the page file and the page follows. Optional on every section: `id` (for `#anchors`), and except on `quote` (a full-bleed band of its own) `tone` (`dark`, `surface`, `light`) and `pt`/`pb` (padding steps).
+A page is a hero plus a list of sections (`sections: [...]`). Each section has a `type` (`cards`, `faq`, `callout`, `steps`…, all listed in `content/types.ts`) and its own fields; `components/sections/` has one component per type. Add, remove or reorder sections in the page file and the page follows. Optional on every section: `id` (for `#anchors`) and `pt`/`pb` (padding steps), and `tone` (`dark`, `surface`, `light`). `light` works only on sections without dark boxes in them (callout, steps, featureGrid, markerList, wallet, faq, richText and the like); the types refuse it elsewhere. `quote` is a full-bleed band of its own and takes neither tone nor padding.
 
 Links to other pages are written as paths (`/solutions/white-label/`). Labels on cards, menu items and breadcrumbs come from the linked page's own `label`, so a rename is one edit. The build fails on a link to a path that has no page, and `scripts/check-links.mts` fails it on any other broken link or missing file. Copy can mark words with `**double asterisks**` for the bright emphasis the mockups use; there is no other markup.
 

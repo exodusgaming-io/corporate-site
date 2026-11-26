@@ -60,7 +60,7 @@ type SpecimenProps = { id: string; title: string; notInMockups?: boolean; note?:
 function Specimen({ id, title, notInMockups, note, children }: SpecimenProps) {
   const index = String(contents.findIndex(([key]) => key === id) + 1).padStart(2, "0");
   return (
-    <div id={id} className="flex scroll-mt-28 flex-col gap-8 border-t border-line pt-10">
+    <div id={id} className="flex scroll-mt-9 flex-col gap-8 border-t border-line pt-10">
       <div className="flex flex-wrap items-baseline justify-between gap-4">
         <Eyebrow index={index}>{title}</Eyebrow>
         {notInMockups && (
@@ -121,7 +121,7 @@ export default function StyleGuide() {
   return (
     <>
       <Header nav={nav} />
-      <main className="flex-1">
+      <main id="main" tabIndex={-1} className="flex-1 outline-none">
         <HomeHero
           title={
             <>
@@ -282,6 +282,7 @@ export default function StyleGuide() {
                   </Button>
                 </div>
                 <div className="flex flex-wrap items-center gap-3">
+                  <Button size="xl">Extra large · 56px</Button>
                   <Button size="lg">Large · 52px</Button>
                   <Button size="md">Medium · 48px</Button>
                   <Button size="sm">Small · 40px</Button>
@@ -384,7 +385,7 @@ export default function StyleGuide() {
           <FeatureGrid items={[...features].slice(0, 3)} variant="open" />
         </Section>
 
-        <div id="page-hero" className="scroll-mt-20">
+        <div id="page-hero" className="scroll-mt-1">
           <PageHero
             as="h2"
             eyebrow="Game Providers"
@@ -403,7 +404,7 @@ export default function StyleGuide() {
           />
         </div>
 
-        <div id="detail-hero" className="scroll-mt-20">
+        <div id="detail-hero" className="scroll-mt-1">
           <PageHero
             as="h2"
             breadcrumbs={
@@ -425,7 +426,7 @@ export default function StyleGuide() {
           />
         </div>
 
-        <div id="quote" className="scroll-mt-20">
+        <div id="quote" className="scroll-mt-1">
           <Quote cite="Placeholder — Name, Role">
             A platform where the operator sets the direction and the technology keeps up.
           </Quote>
@@ -579,7 +580,7 @@ export default function StyleGuide() {
           </div>
         </Section>
 
-        <div id="cta" className="scroll-mt-20">
+        <div id="cta" className="scroll-mt-1">
           <CtaBand
             title="Come and talk to us. See for yourself."
             text="We've been told we're quite nice people to talk to. You'll get someone who can make a decision, not a ticket number."

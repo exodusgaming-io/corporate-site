@@ -32,16 +32,16 @@ export function PageView({ lang, segments }: { lang: SiteLang; segments?: string
         <Hero page={page} site={site} />
         <Sections page={page} site={site} />
         {page.cta !== false && (
-        <CtaBand
-          title={t.cta.title}
-          text={t.cta.text}
-          actions={
-            <>
-              <Button href="#demo">{t.bookDemo}</Button>
-              <Button href={site.href("/contact/")} variant="outline">
-                {t.cta.message}
-              </Button>
-            </>
+          <CtaBand
+            title={t.cta.title}
+            text={t.cta.text}
+            actions={
+              <>
+                <Button href="#demo">{t.bookDemo}</Button>
+                <Button href={site.href("/contact/")} variant="outline">
+                  {t.cta.message}
+                </Button>
+              </>
             }
           />
         )}

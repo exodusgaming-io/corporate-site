@@ -5,14 +5,16 @@ import { Band, SectionHeading, type SectionProps } from "./shared";
 
 const pad = (i: number) => String(i + 1).padStart(2, "0");
 
-function ItemCard({ item, i, kind, site }: { item: CardItem; i: number; kind: SectionProps<"cards">["section"]["card"]; site: Site }) {
+type ItemCardProps = { item: CardItem; i: number; kind: SectionProps<"cards">["section"]["card"]; site: Site; as: "h2" | "h3" };
+
+function ItemCard({ item, i, kind, site, as }: ItemCardProps) {
   const title = item.title ?? (item.page ? site.page(item.page).label : "");
   const href = item.page ? site.href(item.page) : undefined;
   switch (kind) {
     case "numbered":
-      return <Card size="md" index={pad(i)} title={title} text={item.text} href={href} />;
+      return <Card as={as} size="md" index={pad(i)} title={title} text={item.text} href={href} />;
     case "status":
-      return <Card size="tall" status={item.status} meta={item.meta} title={title} text={item.text} href={href} />;
+      return <Card as={as} size="tall" status={item.status} meta={item.meta} title={title} text={item.text} href={href} />;
     case "integration":
       return (
         <Card
@@ -30,9 +32,9 @@ function ItemCard({ item, i, kind, site }: { item: CardItem; i: number; kind: Se
         />
       );
     case "feature":
-      return <Card size="md" icon={item.icon} iconSize={28} title={title} text={item.text} href={href} />;
+      return <Card as={as} size="md" icon={item.icon} iconSize={28} title={title} text={item.text} href={href} />;
     default:
-      return <Card size="md" compact icon={item.icon} iconSize={28} title={title} text={item.text} href={href} />;
+      return <Card as={as} size="md" compact icon={item.icon} iconSize={28} title={title} text={item.text} href={href} />;
   }
 }
 
@@ -49,7 +51,15 @@ export function CardsSection({ section, site }: SectionProps<"cards">) {
         style={{ gridTemplateColumns: `repeat(auto-fit, minmax(min(100%, ${min}px), 1fr))` }}
       >
         {section.items.map((item, i) => (
-          <ItemCard key={item.title ?? item.page} item={item} i={i} kind={section.card} site={site} />
+          // Without a section heading the card titles are the section's headings (h2).
+          <ItemCard
+            key={item.title ?? item.page}
+            item={item}
+            i={i}
+            kind={section.card}
+            site={site}
+            as={section.heading ? "h3" : "h2"}
+          />
         ))}
         {section.extra && (
           <Card

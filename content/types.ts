@@ -30,31 +30,34 @@ export type Heading = {
 };
 
 type Common = { id?: string; tone?: Tone; pt?: Pad; pb?: Pad };
+// Sections built from dark boxes (cards, code, screenshots, diagrams): a light tone would put dark text on them.
+type DarkOnly = { tone?: "dark" | "surface" };
 
+// Every section takes an id; tone and padding too, except where its type says otherwise.
 export type Section = Common &
   (
     | { type: "statement"; eyebrow: string; index?: string; bright: string; muted: string; image: Picture; paragraphs: Text[]; link?: LinkTo }
     | { type: "linkList"; heading: Heading; items: { page: PagePath; text: string }[] }
     | { type: "featureGrid"; heading?: Heading; variant?: "panel" | "open"; items: { icon: IconName; title: string; text: string }[] }
-    | { type: "productTabs"; heading: Heading; explore: string; items: { page: PagePath; shot: string; text: string }[] }
-    | { type: "cards"; heading?: Heading; minWidth?: number; card?: "status" | "numbered" | "icon" | "feature" | "integration"; items: CardItem[]; extra?: { icon: IconName; title: string; text: string; link: LinkTo } }
-    | { type: "tiles"; heading: Heading & { lead?: Text }; items: { page: PagePath; icon: IconName }[] }
+    | { type: "productTabs"; heading: Heading; explore: string; items: { page: PagePath; shot: string; text: string }[] } & DarkOnly
+    | { type: "cards"; heading?: Heading; minWidth?: number; card?: "status" | "numbered" | "icon" | "feature" | "integration"; items: CardItem[]; extra?: { icon: IconName; title: string; text: string; link: LinkTo } } & DarkOnly
+    | { type: "tiles"; heading: Heading & { lead?: Text }; items: { page: PagePath; icon: IconName }[] } & DarkOnly
     // A full-bleed band of its own: it takes no tone or padding.
     | { type: "quote"; text: string; image?: Picture; link?: LinkTo; eyebrow?: string; index?: string; tone?: never; pt?: never; pb?: never }
     | { type: "mediaSplit"; image: Picture; eyebrow: string; index?: string; title: string; paragraphs: Text[] }
     | { type: "numberedRows"; heading: Heading; items: { title: string; text: string }[] }
     | { type: "markerList"; eyebrow: string; index?: string; title: string; lead: Text; label?: string; marker: "check" | "cross"; items: { title: string; text?: string }[] }
-    | { type: "team"; heading: Heading; people: { name: string; role: string; photo?: string }[] }
-    | { type: "productCards"; featured: { page: PagePath; icon: IconName; kicker: string; text: string; tags: string[]; image: Picture; cta: string }; items: { page: PagePath; icon: IconName; text: string }[]; cta: string }
-    | { type: "stack"; heading: Heading; brand: { title: string; text: string }; top: PagePath[]; core: { page: PagePath; parts: string[] }; bottom: { page: PagePath; title?: string; text: string }[] }
-    | { type: "compare"; items: { eyebrow: string; title: string; text: string; page?: PagePath }[] }
-    | { type: "plans"; heading: Heading; items: { page: PagePath; text: string; specs: { term: string; value: string }[]; cta: string }[] }
+    | { type: "team"; heading: Heading; people: { name: string; role: string; photo?: string }[] } & DarkOnly
+    | { type: "productCards"; featured: { page: PagePath; icon: IconName; kicker: string; text: string; tags: string[]; image: Picture; cta: string }; items: { page: PagePath; icon: IconName; text: string }[]; cta: string } & DarkOnly
+    | { type: "stack"; heading: Heading; brand: { title: string; text: string }; top: PagePath[]; core: { page: PagePath; parts: string[] }; bottom: { page: PagePath; title?: string; text: string }[] } & DarkOnly
+    | { type: "compare"; items: { eyebrow: string; title: string; text: string; page?: PagePath }[] } & DarkOnly
+    | { type: "plans"; heading: Heading; items: { page: PagePath; text: string; specs: { term: string; value: string }[]; cta: string }[] } & DarkOnly
     | { type: "imageCards"; heading?: Heading; items: { page: PagePath; image: Picture; text: string; cta: string }[] }
-    | { type: "rowCards"; heading?: Heading; items: { page: PagePath; icon: IconName; text: string; cta: string }[] }
+    | { type: "rowCards"; heading?: Heading; items: { page: PagePath; icon: IconName; text: string; cta: string }[] } & DarkOnly
     | { type: "callout"; kicker?: string; title: string; text: string; link?: LinkTo }
-    | { type: "codeSplit"; eyebrow: string; index?: string; title: string; lead: Text; checks: string[]; code: { caption: string; text: string } }
-    | { type: "methodTabs"; heading: Heading; items: Method[] }
-    | { type: "flow"; heading: Heading; steps: FlowStep[] }
+    | { type: "codeSplit"; eyebrow: string; index?: string; title: string; lead: Text; checks: string[]; code: { caption: string; text: string } } & DarkOnly
+    | { type: "methodTabs"; heading: Heading; items: Method[] } & DarkOnly
+    | { type: "flow"; heading: Heading; steps: FlowStep[] } & DarkOnly
     | { type: "crossLinks"; items: { kicker: string; page: PagePath }[] }
     | {
         type: "studios";
@@ -69,13 +72,13 @@ export type Section = Common &
         sweepsLabel: string;
         logo: string;
         empty: { text: string; action: Action };
-      }
+      } & DarkOnly
     | { type: "steps"; heading: Heading; items: { title: string; text: string }[] }
     | { type: "wallet"; eyebrow: string; index?: string; title: string; lead: Text; left: string; middle: string; right: string }
     | { type: "faq"; eyebrow: string; index?: string; title: string; link?: LinkTo; items: { question: string; answer: string }[] }
-    | { type: "shot"; label: string }
-    | { type: "code"; icon?: IconName; title: string; text: string; code: string }
-    | { type: "related"; title: string; all: string }
+    | { type: "shot"; label: string } & DarkOnly
+    | { type: "code"; icon?: IconName; title: string; text: string; code: string } & DarkOnly
+    | { type: "related"; title: string; all: string } & DarkOnly
     | { type: "richText"; blocks: RichBlock[] }
   );
 
