@@ -60,7 +60,7 @@ export function Menu({ open, onClose }: { open: boolean; onClose: () => void }) 
                     <li key={link.href}>
                       <Link
                         href={link.href}
-                        className="inline-flex min-h-11 items-center text-body leading-[1.3] text-fg-soft transition-colors hover:text-fg md:min-h-0"
+                        className="flex min-h-11 w-fit items-center text-body leading-[1.3] text-fg-soft transition-colors hover:text-fg md:min-h-0"
                       >
                         {link.label}
                       </Link>
