@@ -110,8 +110,12 @@
 
   /* Side padding of every section and the width its content stops at. */
   --spacing-gutter: clamp(1.25rem, 4.5vw, 4rem);
+  /* Section padding steps, largest to smallest (Section pt/pb: xl, lg, md, sm, xs). */
+  --spacing-section-xl: clamp(6rem, 12vw, 11.5rem);
   --spacing-section: clamp(5rem, 10vw, 9.5rem);
+  --spacing-section-md: clamp(4.5rem, 8vw, 7.5rem);
   --spacing-section-sm: clamp(4rem, 7vw, 6.5rem);
+  --spacing-section-xs: clamp(3rem, 5vw, 4.5rem);
   --spacing-header: 4.75rem;
   --container-page: 90rem;
 

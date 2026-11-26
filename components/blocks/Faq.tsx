@@ -3,12 +3,13 @@ import type { ReactNode } from "react";
 export type FaqItem = { question: string; answer: ReactNode };
 
 // Accordion on native <details>: works without JavaScript, keyboard and screen readers included.
-// Items sharing `name` close each other, so one answer is open at a time.
-export function Faq({ items, name }: { items: FaqItem[]; name: string }) {
+// Items sharing `name` close each other, so one answer is open at a time. `defaultOpen`: the item
+// (by position) that starts open, as on the mockup's detail and sportsbook pages.
+export function Faq({ items, name, defaultOpen }: { items: FaqItem[]; name: string; defaultOpen?: number }) {
   return (
     <div className="flex flex-col border-b border-line">
-      {items.map((item) => (
-        <details key={item.question} name={name} className="group border-t border-line">
+      {items.map((item, i) => (
+        <details key={item.question} name={name} open={i === defaultOpen} className="group border-t border-line">
           <summary className="flex list-none items-center justify-between gap-6 py-6.5 text-fg transition-colors hover:text-accent [&::-webkit-details-marker]:hidden">
             <span className="font-display text-[clamp(1.1875rem,1.6vw,1.375rem)] leading-[1.3] font-semibold tracking-[-0.01em]">
               {item.question}

@@ -4,16 +4,20 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/Button";
-import { headerLinks } from "@/content/navigation";
 import { cn } from "@/lib/cn";
+import type { Nav } from "@/lib/site";
 import { DemoDrawer } from "./DemoDrawer";
 import { Logo } from "./Logo";
 import { Menu } from "./Menu";
 
+// A path with its trailing slash, as the links are written: usePathname drops it.
+const withSlash = (path: string) => (path.endsWith("/") ? path : `${path}/`);
+
 // Bar over the top of every page: transparent over the hero, frosted glass once the page scrolls.
 // The menu button opens the full-screen menu; "Book a demo" opens the drawer.
-export function Header() {
-  const pathname = usePathname();
+export function Header({ nav }: { nav: Nav }) {
+  const pathname = withSlash(usePathname());
+  const { dictionary: t } = nav;
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -26,6 +30,12 @@ export function Header() {
 
   return (
     <>
+      <a
+        href="#main"
+        className="fixed top-3 left-3 z-[60] -translate-y-24 rounded-full bg-platinum px-5 py-3 text-small font-medium text-onyx focus:translate-y-0"
+      >
+        {t.skipToContent}
+      </a>
       <header
         data-tone="dark"
         className={cn(
@@ -33,9 +43,9 @@ export function Header() {
           scrolled ? "border-line bg-onyx/82 backdrop-blur-[16px]" : "border-transparent bg-transparent",
         )}
       >
-        <Logo />
+        <Logo href={nav.home} />
         <nav aria-label="Main" className="hidden min-w-0 flex-1 justify-end gap-8 min-[52rem]:flex">
-          {headerLinks.map((link) => {
+          {nav.header.map((link) => {
             const current = pathname.startsWith(link.href);
             return (
               <Link
@@ -54,12 +64,12 @@ export function Header() {
         </nav>
         <div className="ml-auto flex items-center gap-[clamp(12px,2vw,28px)] min-[52rem]:ml-0">
           <Button href="#demo" size="sm">
-            Book a demo
+            {t.bookDemo}
           </Button>
           <button
             type="button"
             onClick={() => setMenuOpen(true)}
-            aria-label="Open menu"
+            aria-label={t.menu.open}
             aria-expanded={menuOpen}
             aria-haspopup="dialog"
             className="flex size-11 flex-none flex-col items-center justify-center gap-[5px] rounded-full border border-fg/30 transition-colors hover:border-fg md:size-10"
@@ -69,8 +79,8 @@ export function Header() {
           </button>
         </div>
       </header>
-      <Menu open={menuOpen} onClose={() => setMenuOpen(false)} />
-      <DemoDrawer />
+      <Menu nav={nav} open={menuOpen} onClose={() => setMenuOpen(false)} />
+      <DemoDrawer dictionary={t} />
     </>
   );
 }

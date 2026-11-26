@@ -1,6 +1,5 @@
-// Site-wide copy. Changes go through a PR; a merge to main rebuilds staging.
+// Site-wide defaults: the name in every <title> and the description for pages without their own.
 export const site = {
   title: "Exodus Gaming",
-  tagline: "The new exodusgaming.io is on its way.",
-  description: "Exodus Gaming — iGaming platform.",
+  description: "Platform provider for casino, sweepstakes and sportsbook brands: turnkey, white label and the products underneath.",
 };

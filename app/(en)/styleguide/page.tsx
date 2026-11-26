@@ -17,6 +17,7 @@ import { CookieBanner, CookieBannerView, ShowCookieBannerButton } from "@/compon
 import { Footer } from "@/components/site/Footer";
 import { Header } from "@/components/site/Header";
 import { ArrowLink } from "@/components/ui/ArrowLink";
+import { getNav } from "@/lib/site";
 import { Button, buttonClasses } from "@/components/ui/Button";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Icon } from "@/components/ui/Icon";
@@ -27,7 +28,7 @@ import { ContrastTable, Swatches } from "./ColourTokens";
 
 // Every token and component with placeholder copy. Not linked from the site and never indexed.
 export const metadata: Metadata = {
-  title: "Style guide · Exodus Gaming",
+  title: "Style guide",
   robots: { index: false, follow: false },
 };
 
@@ -116,9 +117,10 @@ const faq = [
 ];
 
 export default function StyleGuide() {
+  const nav = getNav("en");
   return (
     <>
-      <Header />
+      <Header nav={nav} />
       <main className="flex-1">
         <HomeHero
           title={
@@ -567,6 +569,7 @@ export default function StyleGuide() {
                 </Button>
                 <ShowCookieBannerButton />
                 {/* A plain link: through the router it would be prefetched, and this page never exists. */}
+                {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
                 <a href="/styleguide/missing-page/" className={buttonClasses("outline", "sm")}>
                   Open the 404 page
                 </a>
@@ -591,7 +594,7 @@ export default function StyleGuide() {
           />
         </div>
       </main>
-      <Footer />
+      <Footer nav={nav} />
       <CookieBanner />
     </>
   );

@@ -7,7 +7,7 @@
     "predev": "node scripts/fetch-fonts.mts",
     "dev": "next dev",
     "prebuild": "node scripts/fetch-fonts.mts",
-    "build": "next build && node scripts/write-redirects.mts",
+    "build": "next build && node scripts/write-redirects.mts && node scripts/check-links.mts",
     "start": "next start",
     "lint": "eslint"
   },
