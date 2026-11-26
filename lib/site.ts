@@ -15,7 +15,6 @@ export type Site = {
   dictionary: Dictionary;
   pages: Page[];
   page: (path: string) => Page;
-  find: (path: string) => Page | undefined;
   href: (path: string) => string;
   hubOf: (path: string) => PagePath | undefined;
   crumbs: (path: string) => { label: string; href?: string }[];
@@ -50,7 +49,6 @@ export function getSite(lang: SiteLang): Site {
     dictionary,
     pages,
     page,
-    find: (path) => byPath.get(path),
     // Site paths are checked and localised; #anchors, mailto: and other sites pass through.
     href: (path) => {
       if (!path.startsWith("/")) return path;

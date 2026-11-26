@@ -9,6 +9,7 @@ import { cn } from "@/lib/cn";
 type Studio = { name: string; category: string; sweeps?: boolean };
 
 export type StudioDirectoryProps = {
+  filterLabel: string;
   all: string;
   categories: string[];
   sweepsFilter: string;
@@ -21,7 +22,7 @@ export type StudioDirectoryProps = {
 };
 
 // Game Providers: every studio as a card, filtered by category or sweeps-ready, and searched by name.
-export function StudioDirectory({ all, categories, sweepsFilter, search, count, studios, sweepsLabel, logo, empty }: StudioDirectoryProps) {
+export function StudioDirectory({ filterLabel, all, categories, sweepsFilter, search, count, studios, sweepsLabel, logo, empty }: StudioDirectoryProps) {
   const [filter, setFilter] = useState(all);
   const [query, setQuery] = useState("");
   const needle = query.trim().toLowerCase();
@@ -34,7 +35,7 @@ export function StudioDirectory({ all, categories, sweepsFilter, search, count, 
   return (
     <div className="flex flex-col gap-7">
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <div role="group" aria-label={search} className="flex flex-wrap gap-2">
+        <div role="group" aria-label={filterLabel} className="flex flex-wrap gap-2">
           {[all, ...categories, sweepsFilter].map((label) => (
             <button
               key={label}

@@ -28,6 +28,7 @@ const page: Page = {
   sections: [
     {
       type: "studios",
+      filterLabel: "Filter studios",
       all: "All",
       categories: ["Slots", "Live casino", "Crash & instant", "Table"],
       sweepsFilter: "Sweeps-ready",

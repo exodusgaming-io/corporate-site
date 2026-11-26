@@ -31,8 +31,7 @@ export function PageView({ lang, segments }: { lang: SiteLang; segments?: string
       <main id="main" tabIndex={-1} className="flex-1 outline-none">
         <Hero page={page} site={site} />
         <Sections page={page} site={site} />
-      </main>
-      {page.cta !== false && (
+        {page.cta !== false && (
         <CtaBand
           title={t.cta.title}
           text={t.cta.text}
@@ -43,9 +42,10 @@ export function PageView({ lang, segments }: { lang: SiteLang; segments?: string
                 {t.cta.message}
               </Button>
             </>
-          }
-        />
-      )}
+            }
+          />
+        )}
+      </main>
       <Footer nav={nav} />
     </>
   );

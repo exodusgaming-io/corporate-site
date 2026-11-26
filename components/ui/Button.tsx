@@ -3,7 +3,7 @@ import type { ComponentProps, ReactNode } from "react";
 import { cn } from "@/lib/cn";
 
 type Variant = "primary" | "outline" | "accent";
-type Size = "sm" | "md" | "lg";
+type Size = "sm" | "md" | "lg" | "xl";
 
 const base =
   "inline-flex shrink-0 items-center justify-center gap-2.5 rounded-full font-sans leading-none font-medium whitespace-nowrap transition-[color,background-color,border-color,translate] duration-200 active:translate-y-px disabled:cursor-not-allowed disabled:active:translate-y-0";
@@ -23,6 +23,7 @@ const sizes: Record<Size, string> = {
   sm: "h-11 px-[18px] text-nav md:h-10",
   md: "h-12 px-6 text-small",
   lg: "h-13 px-7 text-body",
+  xl: "h-14 px-8 text-body",
 };
 
 // For links that must not go through the router (e.g. a page that should load fresh).

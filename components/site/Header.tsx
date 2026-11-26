@@ -43,15 +43,16 @@ export function Header({ nav }: { nav: Nav }) {
           scrolled ? "border-line bg-onyx/82 backdrop-blur-[16px]" : "border-transparent bg-transparent",
         )}
       >
-        <Logo href={nav.home} />
-        <nav aria-label="Main" className="hidden min-w-0 flex-1 justify-end gap-8 min-[52rem]:flex">
+        <Logo href={nav.home} label={t.logo} />
+        <nav aria-label={t.mainNav} className="hidden min-w-0 flex-1 justify-end gap-8 min-[52rem]:flex">
           {nav.header.map((link) => {
+            // The section's own page is the current page; on a page under it the link is only marked as current.
             const current = pathname.startsWith(link.href);
             return (
               <Link
                 key={link.href}
                 href={link.href}
-                aria-current={current ? "page" : undefined}
+                aria-current={pathname === link.href ? "page" : current ? "true" : undefined}
                 className={cn(
                   "text-nav leading-6 font-medium whitespace-nowrap transition-colors hover:text-fg",
                   current ? "text-fg" : "text-fg-soft",

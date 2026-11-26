@@ -13,6 +13,8 @@ export function CodeSection({ section }: SectionProps<"code">) {
         </div>
         <pre
           tabIndex={0}
+          role="region"
+          aria-label={section.title}
           className="min-w-0 flex-[1.3_1_380px] overflow-x-auto rounded-md border border-line bg-onyx p-7 font-mono text-nav leading-[1.7] text-fg-soft"
         >
           {section.code}

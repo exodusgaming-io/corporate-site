@@ -3,6 +3,8 @@ import type { Dictionary } from "../types";
 const dictionary: Dictionary = {
   skipToContent: "Skip to content",
   home: "Home",
+  mainNav: "Main",
+  logo: "Exodus home",
   bookDemo: "Book a demo",
   menu: { open: "Open menu", close: "Close menu", title: "Menu", sections: "Sections" },
   breadcrumb: "Breadcrumb",

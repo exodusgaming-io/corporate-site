@@ -27,7 +27,7 @@ export function Menu({ nav, open, onClose }: { nav: Nav; open: boolean; onClose:
       >
         <div aria-hidden="true" className="pointer-events-none absolute inset-[auto_-10%_-40%_30%] h-4/5 bg-glow" />
         <div className="relative flex h-header items-center justify-between gap-4">
-          <Logo href={nav.home} />
+          <Logo href={nav.home} label={t.logo} />
           <CloseButton onClick={onClose} label={t.menu.close} />
         </div>
         <div className="relative mx-auto grid w-full max-w-page flex-1 grid-cols-[repeat(auto-fit,minmax(min(100%,420px),1fr))] gap-x-[clamp(32px,6vw,96px)] gap-y-12 pt-[clamp(24px,5vw,72px)]">

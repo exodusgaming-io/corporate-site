@@ -5,9 +5,8 @@ import { ArrowLink } from "@/components/ui/ArrowLink";
 import { Button } from "@/components/ui/Button";
 import type { Hero } from "@/content/types";
 import { rich } from "@/lib/rich";
-import type { Site } from "@/lib/site";
 
-type ContactHeroProps = { hero: Extract<Hero, { kind: "contact" }>; site: Site; breadcrumbs?: ReactNode };
+type ContactHeroProps = { hero: Extract<Hero, { kind: "contact" }>; breadcrumbs?: ReactNode };
 
 // The whole Contact page: how to reach us on the left, the form on the right.
 // The form is only the layout for now: sending (Attio, the inbox, the captcha) comes with #6543, so the
@@ -75,7 +74,7 @@ export function ContactHero({ hero, breadcrumbs }: ContactHeroProps) {
               <div className="flex h-16 items-center rounded-sm border border-dashed border-line bg-onyx px-4.5 font-mono text-[0.6875rem] tracking-[0.04em] text-fg-muted uppercase">
                 {form.captcha}
               </div>
-              <Button type="submit" disabled className="h-14 px-8">
+              <Button type="submit" disabled size="xl">
                 {form.submit}
               </Button>
             </div>

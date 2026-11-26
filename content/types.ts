@@ -39,7 +39,8 @@ export type Section = Common &
     | { type: "productTabs"; heading: Heading; explore: string; items: { page: PagePath; shot: string; text: string }[] }
     | { type: "cards"; heading?: Heading; minWidth?: number; card?: "status" | "numbered" | "icon" | "feature" | "integration"; items: CardItem[]; extra?: { icon: IconName; title: string; text: string; link: LinkTo } }
     | { type: "tiles"; heading: Heading & { lead?: Text }; items: { page: PagePath; icon: IconName }[] }
-    | { type: "quote"; text: string; image?: Picture; link?: LinkTo; eyebrow?: string; index?: string }
+    // A full-bleed band of its own: it takes no tone or padding.
+    | { type: "quote"; text: string; image?: Picture; link?: LinkTo; eyebrow?: string; index?: string; tone?: never; pt?: never; pb?: never }
     | { type: "mediaSplit"; image: Picture; eyebrow: string; index?: string; title: string; paragraphs: Text[] }
     | { type: "numberedRows"; heading: Heading; items: { title: string; text: string }[] }
     | { type: "markerList"; eyebrow: string; index?: string; title: string; lead: Text; label?: string; marker: "check" | "cross"; items: { title: string; text?: string }[] }
@@ -58,6 +59,7 @@ export type Section = Common &
     | {
         type: "studios";
         // Filter chips: everything, each category, sweeps-ready only. {shown} and {total} fill the count line.
+        filterLabel: string;
         all: string;
         categories: string[];
         sweepsFilter: string;
@@ -161,6 +163,9 @@ export type Page = {
 export type Dictionary = {
   skipToContent: string;
   home: string;
+  // Accessible names: the header's link list and the logo link.
+  mainNav: string;
+  logo: string;
   bookDemo: string;
   menu: { open: string; close: string; title: string; sections: string };
   breadcrumb: string;

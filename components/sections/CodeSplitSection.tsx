@@ -28,6 +28,7 @@ function CodeLines({ text }: { text: string }) {
 
 // Pitch to developers on the left (with a checklist), a code window on the right.
 export function CodeSplitSection({ section }: SectionProps<"codeSplit">) {
+  const captionId = `${section.id ?? "code"}-caption`;
   return (
     <Band
       section={section}
@@ -45,13 +46,13 @@ export function CodeSplitSection({ section }: SectionProps<"codeSplit">) {
         </ul>
       </SplitIntro>
       <figure className="flex min-w-0 flex-[1.2_1_420px] flex-col overflow-hidden rounded-lg border border-line bg-surface">
-        <figcaption className="flex items-center gap-2 border-b border-line px-4.5 py-3.5">
+        <figcaption id={captionId} className="flex items-center gap-2 border-b border-line px-4.5 py-3.5">
           <span aria-hidden="true" className="size-2.5 rounded-full bg-shadow-grey" />
           <span aria-hidden="true" className="size-2.5 rounded-full bg-shadow-grey" />
           <span aria-hidden="true" className="size-2.5 rounded-full bg-shadow-grey" />
           <span className="ml-3 font-mono text-eyebrow tracking-normal text-fg-muted">{section.code.caption}</span>
         </figcaption>
-        <pre tabIndex={0} className="overflow-x-auto p-7 font-mono text-nav leading-[1.75] text-fg-soft">
+        <pre tabIndex={0} role="region" aria-labelledby={captionId} className="overflow-x-auto p-7 font-mono text-nav leading-[1.75] text-fg-soft">
           <CodeLines text={section.code.text} />
         </pre>
       </figure>

@@ -50,7 +50,7 @@ export function MethodTabs({ items }: { items: MethodPanel[] }) {
   };
 
   return (
-    <div ref={root} className="flex scroll-mt-[calc(var(--spacing-header)+24px)] flex-col gap-[clamp(32px,4vw,48px)]">
+    <div ref={root} className="flex scroll-mt-6 flex-col gap-[clamp(32px,4vw,48px)]">
       <div role="tablist" onKeyDown={onKeyDown} className="flex flex-wrap gap-2">
         {items.map((item, i) => {
           const selected = i === active;

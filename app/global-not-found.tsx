@@ -15,7 +15,9 @@ export const metadata: Metadata = { title: `${t.seo} | ${site.title}` };
 
 // GitHub Pages matches paths case-sensitively; a visitor who typed /About/ lands here and is sent on to
 // /about/. If that doesn't exist either, this page stays. Real 301s move to Cloudflare at launch (#6545).
-const lowercase = `(function(){var p=location.pathname,l=p.toLowerCase();if(p!==l)location.replace(l+location.search+location.hash)})()`;
+// Leading slashes collapse to one and the origin is spelled out: //Evil.com/ must not become a link to
+// another site.
+const lowercase = `(function(){var p=location.pathname,l=p.toLowerCase().replace(/^[\\/\\\\]+/,"/");if(p!==l)location.replace(location.origin+l+location.search+location.hash)})()`;
 
 // The 404 page for every unknown path, written to out/404.html. It has no layout of its own, so it
 // loads the styles and fonts itself (app/global-not-found.js, next.config.ts experimental.globalNotFound).

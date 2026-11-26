@@ -30,7 +30,7 @@ export function Hero({ page, site }: { page: Page; site: Site }) {
         />
       );
     case "contact":
-      return <ContactHero hero={hero} site={site} breadcrumbs={crumbs} />;
+      return <ContactHero hero={hero} breadcrumbs={crumbs} />;
     default:
       return (
         <PageHero

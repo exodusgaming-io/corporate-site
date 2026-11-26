@@ -5,6 +5,7 @@ export function StudiosSection({ section, site }: SectionProps<"studios">) {
   return (
     <Band section={section} defaults={{ pt: "xs", pb: "lg" }}>
       <StudioDirectory
+        filterLabel={section.filterLabel}
         all={section.all}
         categories={section.categories}
         sweepsFilter={section.sweepsFilter}
