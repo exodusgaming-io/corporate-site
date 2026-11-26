@@ -11,7 +11,7 @@ export function FeatureGridSection({ section, site }: SectionProps<"featureGrid"
       innerClassName="flex flex-col gap-[clamp(48px,6vw,88px)]"
     >
       {section.heading && <SectionHeading heading={section.heading} site={site} />}
-      <FeatureGrid variant={section.variant} items={section.items} />
+      <FeatureGrid variant={section.variant} items={section.items} titleAs={section.heading ? "h3" : "h2"} />
     </Band>
   );
 }
