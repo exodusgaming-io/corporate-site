@@ -50,6 +50,10 @@ export function ContactHero({ hero, breadcrumbs }: ContactHeroProps) {
         </div>
         <div className="min-w-[min(100%,440px)] flex-[1.2_1_440px] rounded-xl border border-line bg-surface p-[clamp(24px,3.5vw,48px)]">
           <form className="flex flex-col gap-6" aria-describedby="contact-form-note">
+            {/* First, so a screen reader meets it before the fields. */}
+            <p id="contact-form-note" className="text-small text-fg-muted">
+              {form.note}
+            </p>
             <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,220px),1fr))] gap-4">
               <TextField name="name" label={form.name.label} placeholder={form.name.placeholder} autoComplete="name" required />
               <TextField
@@ -78,9 +82,6 @@ export function ContactHero({ hero, breadcrumbs }: ContactHeroProps) {
                 {form.submit}
               </Button>
             </div>
-            <p id="contact-form-note" className="text-small text-fg-muted">
-              {form.note}
-            </p>
           </form>
         </div>
       </div>

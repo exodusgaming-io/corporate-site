@@ -66,7 +66,7 @@ const page: Page = {
         { question: "Can we hold direct contracts with some studios?", answer: "Yes. Tell us which, and we'll connect them through the same integration." },
       ],
     },
-    { type: "related", title: "More in Solutions", all: "All Solutions" },
+    { type: "related" },
   ],
 };
 

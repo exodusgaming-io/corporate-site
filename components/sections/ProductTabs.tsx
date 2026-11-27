@@ -8,8 +8,8 @@ import { ShotPlaceholder } from "./ShotPlaceholder";
 export type ProductTab = { name: string; href: string; shot: string; text: string };
 
 // Home: products as a vertical tab list; the panel shows the screenshot, a line about it and a link.
-// Arrow keys move between tabs (WAI-ARIA tabs pattern).
-export function ProductTabs({ items, explore }: { items: ProductTab[]; explore: string }) {
+// Arrow keys move between tabs (WAI-ARIA tabs pattern). `explore` is the link text, {name} the product.
+export function ProductTabs({ items, explore, label }: { items: ProductTab[]; explore: string; label: string }) {
   const [active, setActive] = useState(0);
   const id = useId();
   const current = items[active];
@@ -28,7 +28,7 @@ export function ProductTabs({ items, explore }: { items: ProductTab[]; explore: 
 
   return (
     <div className="flex flex-wrap items-stretch gap-x-[clamp(32px,4vw,64px)] gap-y-8">
-      <div role="tablist" aria-orientation="vertical" onKeyDown={onKeyDown} className="flex flex-[1_1_300px] flex-col">
+      <div role="tablist" aria-label={label} aria-orientation="vertical" onKeyDown={onKeyDown} className="flex flex-[1_1_300px] flex-col">
         {items.map((item, i) => {
           const selected = i === active;
           return (
@@ -72,7 +72,7 @@ export function ProductTabs({ items, explore }: { items: ProductTab[]; explore: 
             href={current.href}
             className="inline-flex items-center gap-2.5 border-b border-pure-red py-3.5 text-body leading-none font-medium whitespace-nowrap transition-colors hover:text-accent"
           >
-            {explore} {current.name} <span aria-hidden="true">→</span>
+            {explore.replace("{name}", current.name)} <span aria-hidden="true">→</span>
           </Link>
         </div>
       </div>

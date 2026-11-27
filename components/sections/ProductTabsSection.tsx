@@ -7,6 +7,7 @@ export function ProductTabsSection({ section, site }: SectionProps<"productTabs"
       <SectionHeading heading={section.heading} site={site} />
       <ProductTabs
         explore={section.explore}
+        label={section.heading.title}
         items={section.items.map((item) => ({
           name: site.page(item.page).label,
           href: site.href(item.page),

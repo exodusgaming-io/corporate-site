@@ -185,6 +185,11 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
+  /* A word longer than the line (narrow screens, long Spanish or Russian words) wraps instead of spilling out. */
+  :is(h1, h2, h3) {
+    overflow-wrap: break-word;
+  }
+
   ::selection {
     background: var(--color-pure-red);
     color: var(--color-onyx);

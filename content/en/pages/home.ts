@@ -80,7 +80,7 @@ const page: Page = {
         title: "Five products. One clean core.",
         aside: "The industry assumes a good platform has to be complicated. Most of that complexity is there for its own sake.",
       },
-      explore: "Explore",
+      explore: "Explore {name}",
       items: [
         {
           page: "/products/platform/",

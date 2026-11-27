@@ -16,7 +16,7 @@ const page: Page = {
     methods: [
       { label: "Email", value: contactEmail, href: `mailto:${contactEmail}` },
       // TODO(#6545): the real Telegram handle and LinkedIn page from marketing.
-      { label: "Telegram", value: "@exodus", href: "https://t.me/" },
+      { label: "Telegram", value: "Handle to confirm", href: "https://t.me/" },
       { label: "LinkedIn", value: "Exodus", href: "https://www.linkedin.com/" },
     ],
     demo: { text: "Rather book a call?", label: "Book a demo" },

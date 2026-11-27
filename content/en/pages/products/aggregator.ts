@@ -62,7 +62,7 @@ const page: Page = {
         { question: "Is there a sandbox?", answer: "Yes, with test games from each studio and full API documentation." },
       ],
     },
-    { type: "related", title: "More in Products", all: "All Products" },
+    { type: "related" },
   ],
 };
 

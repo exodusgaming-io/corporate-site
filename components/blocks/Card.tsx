@@ -62,9 +62,10 @@ export function Card({
   className,
 }: CardProps) {
   const style = sizes[size];
+  const hasTop = Boolean(icon || index || status || meta);
   const body = (
     <>
-      {(icon || index || status || meta) && (
+      {hasTop && (
         <div className="flex items-center justify-between gap-3">
           {icon && <Icon name={icon} size={iconSize ?? (size === "sm" ? 24 : 32)} />}
           {index && (
@@ -81,7 +82,7 @@ export function Card({
           {meta && <span className="text-caption leading-none text-fg-muted">{meta}</span>}
         </div>
       )}
-      <Title className={cn("font-display", compact ? "mt-3" : "mt-auto", style.title)}>{title}</Title>
+      <Title className={cn("font-display", compact ? hasTop && "mt-3" : "mt-auto", style.title)}>{title}</Title>
       {text && <p className={cn(size === "sm" ? "text-small" : "text-body", "text-pretty text-fg-soft")}>{text}</p>}
       {tags && tags.length > 0 && (
         <ul className="flex flex-wrap gap-2">

@@ -55,7 +55,7 @@ const page: Page = {
         { question: "Is there a fee for introductions?", answer: "We tell you up front if anything costs money and who it goes to." },
       ],
     },
-    { type: "related", title: "More in Solutions", all: "All Solutions" },
+    { type: "related" },
   ],
 };
 

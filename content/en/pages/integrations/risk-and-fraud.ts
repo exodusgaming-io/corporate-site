@@ -49,7 +49,7 @@ const page: Page = {
         { question: "Does Exodus AI plug into this?", answer: "Yes. AI risk scores appear in the same queue as everything else." },
       ],
     },
-    { type: "related", title: "More in Integrations", all: "All Integrations" },
+    { type: "related" },
   ],
 };
 

@@ -18,7 +18,7 @@ function ItemCard({ item, i, kind, site, as }: ItemCardProps) {
     case "integration":
       return (
         <Card
-          as="h2"
+          as={as}
           size="lg"
           icon={item.icon}
           index={pad(i)}
@@ -63,7 +63,7 @@ export function CardsSection({ section, site }: SectionProps<"cards">) {
         ))}
         {section.extra && (
           <Card
-            as="h2"
+            as={section.heading ? "h3" : "h2"}
             size="lg"
             dashed
             icon={section.extra.icon}

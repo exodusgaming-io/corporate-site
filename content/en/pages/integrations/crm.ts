@@ -62,7 +62,7 @@ const page: Page = {
         { question: "Can our CRM award bonuses?", answer: "Yes, through the bonus API, with the same caps and rules as the back office." },
       ],
     },
-    { type: "related", title: "More in Integrations", all: "All Integrations" },
+    { type: "related" },
   ],
 };
 

@@ -67,7 +67,7 @@ const page: Page = {
         { question: "Can we migrate from another platform?", answer: "Yes. Players, balances and history are migrated with a plan agreed up front and no downtime for players during the switch." },
       ],
     },
-    { type: "related", title: "More in Solutions", all: "All Solutions" },
+    { type: "related" },
   ],
 };
 

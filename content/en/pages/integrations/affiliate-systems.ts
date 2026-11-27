@@ -49,7 +49,7 @@ const page: Page = {
         { question: "How is NGR calculated?", answer: "Using the formula you define, documented so affiliates can check it." },
       ],
     },
-    { type: "related", title: "More in Integrations", all: "All Integrations" },
+    { type: "related" },
   ],
 };
 

@@ -60,7 +60,7 @@ const page: Page = {
         { question: "How do you stop campaigns from being abused?", answer: "Eligibility rules, cost caps and the same risk checks the rest of the platform uses." },
       ],
     },
-    { type: "related", title: "More in Products", all: "All Products" },
+    { type: "related" },
   ],
 };
 

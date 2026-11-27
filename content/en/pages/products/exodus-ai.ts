@@ -54,7 +54,7 @@ const page: Page = {
         { question: "Does it make decisions on its own?", answer: "Only for actions you define and approve in advance. The default is suggest and wait." },
       ],
     },
-    { type: "related", title: "More in Products", all: "All Products" },
+    { type: "related" },
   ],
 };
 

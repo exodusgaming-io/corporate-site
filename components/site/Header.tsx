@@ -30,8 +30,14 @@ export function Header({ nav }: { nav: Nav }) {
 
   return (
     <>
+      {/* Moves focus without adding #main to the history: the router ignores that entry, so Back would
+          land on the same page. The href stays for browsers without JavaScript. */}
       <a
         href="#main"
+        onClick={(event) => {
+          event.preventDefault();
+          document.getElementById("main")?.focus();
+        }}
         className="fixed top-3 left-3 z-[60] -translate-y-24 rounded-full bg-platinum px-5 py-3 text-small font-medium text-onyx focus:translate-y-0"
       >
         {t.skipToContent}

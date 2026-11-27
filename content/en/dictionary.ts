@@ -6,6 +6,9 @@ const dictionary: Dictionary = {
   mainNav: "Main",
   logo: "Exodus home",
   bookDemo: "Book a demo",
+  faq: "FAQ",
+  portrait: "Portrait",
+  related: { title: "More in {hub}", all: "All {hub}" },
   menu: { open: "Open menu", close: "Close menu", title: "Menu", sections: "Sections" },
   breadcrumb: "Breadcrumb",
   footer: {

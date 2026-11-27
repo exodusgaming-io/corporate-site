@@ -56,7 +56,7 @@ const page: Page = {
         { question: "Who owns the custom features?", answer: "We talk about it before we build, and write down what's agreed." },
       ],
     },
-    { type: "related", title: "More in Solutions", all: "All Solutions" },
+    { type: "related" },
   ],
 };
 

@@ -66,7 +66,7 @@ const page: Page = {
         { question: "How are white label commercials structured?", answer: "Revenue share, stated up front. It stays where we said it would." },
       ],
     },
-    { type: "related", title: "More in Solutions", all: "All Solutions" },
+    { type: "related" },
   ],
 };
 

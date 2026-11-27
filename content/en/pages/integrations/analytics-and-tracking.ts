@@ -49,7 +49,7 @@ const page: Page = {
         { question: "Do you support server-side tracking?", answer: "Yes, for conversions and key lifecycle events." },
       ],
     },
-    { type: "related", title: "More in Integrations", all: "All Integrations" },
+    { type: "related" },
   ],
 };
 

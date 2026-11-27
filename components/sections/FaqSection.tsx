@@ -12,7 +12,7 @@ export function FaqSection({ section, site }: SectionProps<"faq">) {
       innerClassName="flex flex-wrap items-start gap-x-[clamp(40px,6vw,96px)] gap-y-10"
     >
       <div className="flex flex-[1_1_320px] flex-col gap-6">
-        <Eyebrow index={section.index ?? "FAQ"}>{section.eyebrow}</Eyebrow>
+        <Eyebrow index={section.index ?? site.dictionary.faq}>{section.eyebrow}</Eyebrow>
         <h2 className="font-display text-heading-lg text-balance">{section.title}</h2>
         {section.link && <ArrowLink href={site.href(section.link.href)}>{section.link.label}</ArrowLink>}
       </div>

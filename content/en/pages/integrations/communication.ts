@@ -56,7 +56,7 @@ const page: Page = {
         { question: "Do you handle unsubscribes?", answer: "Consent is stored on the player and respected by every channel." },
       ],
     },
-    { type: "related", title: "More in Integrations", all: "All Integrations" },
+    { type: "related" },
   ],
 };
 

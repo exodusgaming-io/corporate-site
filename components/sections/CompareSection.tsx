@@ -15,7 +15,7 @@ export function CompareSection({ section, site }: SectionProps<"compare">) {
         const body = (
           <>
             <span className={cn("text-eyebrow uppercase", item.page ? "text-accent" : "text-fg")}>{item.eyebrow}</span>
-            <h3 className="font-display text-heading-sm">
+            <h3 className="font-display text-[clamp(1.625rem,2.6vw,2.25rem)] leading-[1.1] font-semibold tracking-[-0.02em]">
               {item.title}
               {item.page && " →"}
             </h3>

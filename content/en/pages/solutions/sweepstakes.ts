@@ -59,7 +59,7 @@ const page: Page = {
         { question: "Who handles KYC on redemption?", answer: "The platform triggers it at redemption, through your KYC provider." },
       ],
     },
-    { type: "related", title: "More in Solutions", all: "All Solutions" },
+    { type: "related" },
   ],
 };
 

@@ -40,15 +40,21 @@ Everything the site says lives in `content/`; pages are built from it. To change
 
 ### Pages and sections
 
-A page is a hero plus a list of sections (`sections: [...]`). Each section has a `type` (`cards`, `faq`, `callout`, `steps`…, all listed in `content/types.ts`) and its own fields; `components/sections/` has one component per type. Add, remove or reorder sections in the page file and the page follows. Optional on every section: `id` (for `#anchors`) and `pt`/`pb` (padding steps), and `tone` (`dark`, `surface`, `light`). `light` works only on sections without dark boxes in them (callout, steps, featureGrid, markerList, wallet, faq, richText and the like); the types refuse it elsewhere. `quote` is a full-bleed band of its own and takes neither tone nor padding.
+A page is a hero plus a list of sections (`sections: [...]`). Each section has a `type` (`cards`, `faq`, `callout`, `steps`…, all listed in `content/types.ts`) and its own fields; `components/sections/` has one component per type. Add, remove or reorder sections in the page file and the page follows; section numbers (`index: "01"`, `"02"`…) are written by hand, so renumber them after a move (the build says which one is off).
 
-Links to other pages are written as paths (`/solutions/white-label/`). Labels on cards, menu items and breadcrumbs come from the linked page's own `label`, so a rename is one edit. The build fails on a link to a path that has no page, and `scripts/check-links.mts` fails it on any other broken link or missing file. Copy can mark words with `**double asterisks**` for the bright emphasis the mockups use; there is no other markup.
+Optional on every section: `id` (for `#anchors`), `pt`/`pb` (padding steps) and `tone` (`dark`, `surface`, `light`). `light` works only on sections without dark boxes in them (callout, steps, featureGrid, markerList, wallet, faq, richText and the like); the types refuse it elsewhere. `quote` is a full-bleed band of its own and takes neither tone nor padding.
+
+A new page: a file in `content/en/pages/`, a line in `content/en/index.ts`, and, for a page under Products, Solutions or Integrations, its path in `hubs` in `content/navigation.ts` plus a `blurb` (the menu and the "More in …" cards show it). The build fails if a page under a hub is missing from `hubs` or has no blurb.
+
+Links to other pages are written as paths (`/solutions/white-label/`). Labels on cards, menu items and breadcrumbs come from the linked page's own `label`, so a rename is one edit. The build fails on a link to a path that has no page or that isn't a site path, `#anchor`, `mailto:`, `tel:` or `https://` address, and `scripts/check-links.mts` fails it on any other broken link, a missing `#anchor` or a missing file.
+
+Fields typed `Text` in `content/types.ts` (hero leads, paragraphs, notes next to headings) can mark words with `**double asterisks**` for the bright emphasis the mockups use; there is no other markup. In any other field the asterisks would show, and the build fails on that.
 
 Paths are lowercase words joined by hyphens, ending with a slash. GitHub Pages already sends `/about` to `/about/`; it matches case exactly, so the 404 page sends `/About/` on to `/about/` in the browser. Real 301s for both move to Cloudflare at the domain switch (#6545).
 
 ### Languages
 
-English lives at the root. Spanish and Russian (#6542, next PR) go under `/es/` and `/ru/` with the same slugs: a copy of `content/en/` per language, and a route group per language in `app/` so every page gets the right `<html lang>`.
+English lives at the root. Spanish and Russian (#6542, next PR) go under `/es/` and `/ru/` with the same slugs: a copy of `content/en/` per language (translated text only; paths, page links, icons, images, ids and tones stay as they are), a line in `locales` in `lib/site.ts`, and a route group per language in `app/` so every page gets the right `<html lang>`.
 
 ### Redirects
 

@@ -59,7 +59,7 @@ const page: Page = {
         { question: "Can we run must-drop jackpots?", answer: "Yes, by time or by amount." },
       ],
     },
-    { type: "related", title: "More in Products", all: "All Products" },
+    { type: "related" },
   ],
 };
 

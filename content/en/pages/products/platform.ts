@@ -57,7 +57,7 @@ const page: Page = {
         { question: "What if we need something the platform doesn't do?", answer: "Tell us. If it makes sense for your setup we build it, and we tell you honestly how long it'll take." },
       ],
     },
-    { type: "related", title: "More in Products", all: "All Products" },
+    { type: "related" },
   ],
 };
 

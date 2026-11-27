@@ -16,7 +16,8 @@ export type LinkTo = { label: string; href: string };
 export type Picture = { src: string; alt?: string; position?: string };
 
 // Vertical padding of a section, top and bottom separately: the mockups use these steps.
-export type Pad = "none" | "xs" | "sm" | "md" | "lg" | "xl";
+export type { Pad } from "@/components/ui/Section";
+import type { Pad } from "@/components/ui/Section";
 export type Tone = "dark" | "surface" | "light";
 
 // Eyebrow with the section number, heading, and text or a link on the right.
@@ -39,6 +40,7 @@ export type Section = Common &
     | { type: "statement"; eyebrow: string; index?: string; bright: string; muted: string; image: Picture; paragraphs: Text[]; link?: LinkTo }
     | { type: "linkList"; heading: Heading; items: { page: PagePath; text: string }[] }
     | { type: "featureGrid"; heading?: Heading; variant?: "panel" | "open"; items: { icon: IconName; title: string; text: string }[] }
+    // explore: the link under the panel, {name} is the product ("Explore {name}").
     | { type: "productTabs"; heading: Heading; explore: string; items: { page: PagePath; shot: string; text: string }[] } & DarkOnly
     | { type: "cards"; heading?: Heading; minWidth?: number; card?: "status" | "numbered" | "icon" | "feature" | "integration"; items: CardItem[]; extra?: { icon: IconName; title: string; text: string; link: LinkTo } } & DarkOnly
     | { type: "tiles"; heading: Heading & { lead?: Text }; items: { page: PagePath; icon: IconName }[] } & DarkOnly
@@ -52,7 +54,7 @@ export type Section = Common &
     | { type: "stack"; heading: Heading; brand: { title: string; text: string }; top: PagePath[]; core: { page: PagePath; parts: string[] }; bottom: { page: PagePath; title?: string; text: string }[] } & DarkOnly
     | { type: "compare"; items: { eyebrow: string; title: string; text: string; page?: PagePath }[] } & DarkOnly
     | { type: "plans"; heading: Heading; items: { page: PagePath; text: string; specs: { term: string; value: string }[]; cta: string }[] } & DarkOnly
-    | { type: "imageCards"; heading?: Heading; items: { page: PagePath; image: Picture; text: string; cta: string }[] }
+    | { type: "imageCards"; heading?: Heading; items: { page: PagePath; image: Picture; text: string; cta: string }[] } & DarkOnly
     | { type: "rowCards"; heading?: Heading; items: { page: PagePath; icon: IconName; text: string; cta: string }[] } & DarkOnly
     | { type: "callout"; kicker?: string; title: string; text: string; link?: LinkTo }
     | { type: "codeSplit"; eyebrow: string; index?: string; title: string; lead: Text; checks: string[]; code: { caption: string; text: string } } & DarkOnly
@@ -78,7 +80,7 @@ export type Section = Common &
     | { type: "faq"; eyebrow: string; index?: string; title: string; link?: LinkTo; items: { question: string; answer: string }[] }
     | { type: "shot"; label: string } & DarkOnly
     | { type: "code"; icon?: IconName; title: string; text: string; code: string } & DarkOnly
-    | { type: "related"; title: string; all: string } & DarkOnly
+    | { type: "related" } & DarkOnly
     | { type: "richText"; blocks: RichBlock[] }
   );
 
@@ -170,6 +172,11 @@ export type Dictionary = {
   mainNav: string;
   logo: string;
   bookDemo: string;
+  // The FAQ label next to the section name, and the placeholder on team portraits.
+  faq: string;
+  portrait: string;
+  // "More in Products" and "All Products" under every page of a hub; {hub} is the hub's name.
+  related: { title: string; all: string };
   menu: { open: string; close: string; title: string; sections: string };
   breadcrumb: string;
   footer: { blurb: string; company: string; legal: string; rights: string };

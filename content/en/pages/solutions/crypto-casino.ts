@@ -56,7 +56,7 @@ const page: Page = {
         { question: "Can players also pay in fiat?", answer: "Yes. Cards and local methods can sit next to crypto in the same cashier." },
       ],
     },
-    { type: "related", title: "More in Solutions", all: "All Solutions" },
+    { type: "related" },
   ],
 };
 

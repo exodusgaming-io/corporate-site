@@ -2,23 +2,12 @@
 
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { Icon } from "@/components/ui/Icon";
-import type { IconName } from "@/components/ui/icon-names";
+import type { Method } from "@/content/types";
 import { cn } from "@/lib/cn";
-
-export type MethodPanel = {
-  id: string;
-  label: string;
-  icon: IconName;
-  text: string;
-  points: string[];
-  gridLabel: string;
-  tiles: string[];
-  tileStyle: "logo" | "ticker";
-};
 
 // Payment methods as pill tabs. Each method has its own #anchor (/payment-solutions/#crypto): a link with
 // it opens that tab and scrolls to it, and picking a tab puts its anchor in the address to share.
-export function MethodTabs({ items }: { items: MethodPanel[] }) {
+export function MethodTabs({ items, label }: { items: Method[]; label: string }) {
   const [active, setActive] = useState(0);
   const root = useRef<HTMLDivElement>(null);
 
@@ -51,7 +40,7 @@ export function MethodTabs({ items }: { items: MethodPanel[] }) {
 
   return (
     <div ref={root} className="flex scroll-mt-6 flex-col gap-[clamp(32px,4vw,48px)]">
-      <div role="tablist" onKeyDown={onKeyDown} className="flex flex-wrap gap-2">
+      <div role="tablist" aria-label={label} onKeyDown={onKeyDown} className="flex flex-wrap gap-2">
         {items.map((item, i) => {
           const selected = i === active;
           return (
@@ -80,6 +69,7 @@ export function MethodTabs({ items }: { items: MethodPanel[] }) {
           id={item.id}
           role="tabpanel"
           aria-labelledby={`${item.id}-tab`}
+          tabIndex={0}
           hidden={i !== active}
           className="flex-wrap gap-x-[clamp(32px,5vw,80px)] gap-y-8 rounded-xl border border-line bg-surface p-[clamp(28px,4vw,56px)] [&:not([hidden])]:flex"
         >
