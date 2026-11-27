@@ -3,17 +3,19 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { CloseButton, Dialog } from "@/components/ui/Dialog";
-import { contactEmail, menuLinks, productGroups } from "@/content/navigation";
+import type { Nav } from "@/lib/site";
 import { Logo } from "./Logo";
 
 // Full-screen menu behind the header button, on every screen width: numbered sections on the left,
-// every product, solution and integration on the right. Stands in for a mega-menu and a mobile drawer.
-export function Menu({ open, onClose }: { open: boolean; onClose: () => void }) {
+// every product, solution and integration on the right with its one-line description. Stands in for a
+// mega-menu and a mobile drawer.
+export function Menu({ nav, open, onClose }: { nav: Nav; open: boolean; onClose: () => void }) {
+  const { dictionary: t } = nav;
   return (
     <Dialog
       open={open}
       onClose={onClose}
-      label="Menu"
+      label={t.menu.title}
       className="h-dvh w-full -translate-y-3 overflow-x-hidden overflow-y-auto bg-onyx open:translate-y-0 starting:open:-translate-y-3"
     >
       {/* Any link click closes the menu; the page changes behind it. */}
@@ -25,13 +27,13 @@ export function Menu({ open, onClose }: { open: boolean; onClose: () => void }) 
       >
         <div aria-hidden="true" className="pointer-events-none absolute inset-[auto_-10%_-40%_30%] h-4/5 bg-glow" />
         <div className="relative flex h-header items-center justify-between gap-4">
-          <Logo />
-          <CloseButton onClick={onClose} label="Close menu" />
+          <Logo href={nav.home} label={t.logo} />
+          <CloseButton onClick={onClose} label={t.menu.close} />
         </div>
         <div className="relative mx-auto grid w-full max-w-page flex-1 grid-cols-[repeat(auto-fit,minmax(min(100%,420px),1fr))] gap-x-[clamp(32px,6vw,96px)] gap-y-12 pt-[clamp(24px,5vw,72px)]">
-          <nav aria-label="Sections">
+          <nav aria-label={t.menu.sections}>
             <ol>
-              {menuLinks.map((link, i) => (
+              {nav.menu.map((link, i) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
@@ -47,7 +49,7 @@ export function Menu({ open, onClose }: { open: boolean; onClose: () => void }) 
             </ol>
           </nav>
           <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,170px),1fr))] content-start gap-x-8 gap-y-10 pt-3">
-            {productGroups.map((group) => (
+            {nav.groups.map((group) => (
               <nav key={group.title} aria-label={group.title} className="flex flex-col md:gap-3.5">
                 <Link
                   href={group.href ?? "/"}
@@ -55,14 +57,17 @@ export function Menu({ open, onClose }: { open: boolean; onClose: () => void }) 
                 >
                   {group.title}
                 </Link>
-                <ul className="flex flex-col md:gap-3.5">
+                <ul className="flex flex-col gap-2 md:gap-3.5">
                   {group.links.map((link) => (
                     <li key={link.href}>
                       <Link
                         href={link.href}
-                        className="flex min-h-11 w-fit items-center text-body leading-[1.3] text-fg-soft transition-colors hover:text-fg md:min-h-0"
+                        className="group/link flex min-h-11 w-fit flex-col justify-center gap-1 py-1 md:min-h-0 md:py-0"
                       >
-                        {link.label}
+                        <span className="text-body leading-[1.3] text-fg-soft transition-colors group-hover/link:text-fg">
+                          {link.label}
+                        </span>
+                        {link.blurb && <span className="text-caption text-pretty text-fg-muted">{link.blurb}</span>}
                       </Link>
                     </li>
                   ))}
@@ -73,13 +78,13 @@ export function Menu({ open, onClose }: { open: boolean; onClose: () => void }) 
         </div>
         <div className="relative mx-auto flex w-full max-w-page flex-wrap items-center justify-between gap-5 pt-10">
           <a
-            href={`mailto:${contactEmail}`}
+            href={`mailto:${nav.email}`}
             className="inline-flex min-h-11 items-center text-body text-fg-soft transition-colors hover:text-fg"
           >
-            {contactEmail}
+            {nav.email}
           </a>
           <Button href="#demo" size="md">
-            Book a demo
+            {t.bookDemo}
           </Button>
         </div>
       </div>

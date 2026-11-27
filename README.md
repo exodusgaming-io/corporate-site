@@ -1,6 +1,6 @@
 # exodusgaming.io
 
-The company site. Trello: epic #6539, this setup #6540.
+The company site. Trello: epic #6539; setup #6540, design system #6541, pages and routing #6542.
 
 ## Stack
 
@@ -26,13 +26,35 @@ The live exodusgaming.io is still served by `exodusgaming-io/website` until the 
 
 ## Content
 
-Everything the site says lives in `content/`; pages import it. To change copy or add a page, open a pull request: the PR check builds the site, and the merge to `main` deploys staging.
+Everything the site says lives in `content/`; pages are built from it. To change copy or add a page, open a pull request: the PR check builds the site, and the merge to `main` deploys staging.
 
 | File | What |
 |---|---|
-| `content/site.ts` | site title, tagline and meta description |
-| `content/navigation.ts` | header, menu and footer links, contact email |
+| `content/en/pages/*.ts` | one file per page: its path, name, one-line description, SEO title and description, hero and sections |
+| `content/en/index.ts` | the list of English pages; a new page file needs a line here |
+| `content/en/dictionary.ts` | words on every page: header, menu, footer, closing band, Book a demo panel, 404 |
+| `content/navigation.ts` | which pages go in the header, menu and footer, which pages sit under Products, Solutions and Integrations, contact email |
+| `content/types.ts` | the shape of a page and of every section type, with comments |
+| `content/site.ts` | site name (in every `<title>`) and the default description |
 | `content/redirects.ts` | redirects (below) |
+
+### Pages and sections
+
+A page is a hero plus a list of sections (`sections: [...]`). Each section has a `type` (`cards`, `faq`, `callout`, `steps`…, all listed in `content/types.ts`) and its own fields; `components/sections/` has one component per type. Add, remove or reorder sections in the page file and the page follows; section numbers (`index: "01"`, `"02"`…) are written by hand, so renumber them after a move (the build says which one is off).
+
+Optional on every section: `id` (for `#anchors`), `pt`/`pb` (padding steps) and `tone` (`dark`, `surface`, `light`). `light` works only on sections without dark boxes in them (callout, steps, featureGrid, markerList, wallet, faq, richText and the like); the types refuse it elsewhere. `quote` is a full-bleed band of its own and takes neither tone nor padding.
+
+A new page: a file in `content/en/pages/`, a line in `content/en/index.ts`, and, for a page under Products, Solutions or Integrations, its path in `hubs` in `content/navigation.ts` plus a `blurb` (the menu and the "More in …" cards show it). The build fails if a page under a hub is missing from `hubs` or has no blurb.
+
+Links to other pages are written as paths (`/solutions/white-label/`). Labels on cards, menu items and breadcrumbs come from the linked page's own `label`, so a rename is one edit. The build fails on a link to a path that has no page or that isn't a site path, `#anchor`, `mailto:`, `tel:` or `https://` address, and `scripts/check-links.mts` fails it on any other broken link, a missing `#anchor` or a missing file.
+
+Fields typed `Text` in `content/types.ts` (hero leads, paragraphs, notes next to headings) can mark words with `**double asterisks**` for the bright emphasis the mockups use; there is no other markup. In any other field the asterisks would show, and the build fails on that.
+
+Paths are lowercase words joined by hyphens, ending with a slash. GitHub Pages already sends `/about` to `/about/`; it matches case exactly, so the 404 page sends `/About/` on to `/about/` in the browser. Real 301s for both move to Cloudflare at the domain switch (#6545).
+
+### Languages
+
+English lives at the root. Spanish and Russian (#6542, next PR) go under `/es/` and `/ru/` with the same slugs: a copy of `content/en/` per language (translated text only; paths, page links, icons, images, ids and tones stay as they are), a line in `locales` in `lib/site.ts`, and a route group per language in `app/` so every page gets the right `<html lang>`.
 
 ### Redirects
 
@@ -53,8 +75,9 @@ https://staging.exodusgaming.io/styleguide/ (never indexed, not linked from the 
 - **Dark and light sections** — a section sets `data-tone="dark"` or `"light"`, and `text-fg`, `text-fg-soft`,
   `text-accent`, `border-line` and the button colours follow. Use those inside components, not fixed colours.
 - **Components** — `components/ui` (buttons, section, eyebrow, dialog), `components/blocks` (heroes, cards, grids,
-  quote, FAQ…), `components/forms`, `components/site` (header, menu, Book a demo drawer, footer, cookie banner).
-  Any link to `#demo` opens the Book a demo drawer.
+  quote, FAQ…), `components/forms`, `components/site` (header, menu, Book a demo drawer, footer, cookie banner, the
+  page frame), `components/sections` (one per section type, built from the blocks). Any link to `#demo` opens the
+  Book a demo drawer.
 - **Fonts** — self-hosted, see `app/fonts/README.md`. General Sans is downloaded at build (`scripts/fetch-fonts.mts`)
   because its licence doesn't allow publishing the file in a public repository.
 - **Motion** — the animated hero gradient and every transition stop under `prefers-reduced-motion`.
@@ -64,6 +87,6 @@ https://staging.exodusgaming.io/styleguide/ (never indexed, not linked from the 
 ```bash
 npm ci
 npm run dev      # http://localhost:3000; downloads General Sans on first run
-npm run build    # static site in out/
+npm run build    # static site in out/, then redirects and the link check
 npm run lint
 ```

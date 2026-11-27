@@ -1,82 +1,62 @@
-// Site navigation: header, full-screen menu and footer. Changes go through a PR.
-// Paths end with a slash, as the static export writes every page to <path>/index.html.
+import type { PagePath } from "./types";
 
-export type NavLink = { label: string; href: string };
-export type NavGroup = { title: string; href?: string; links: NavLink[] };
+// Site structure: which pages go in the header, the menu and the footer, and which pages sit under which hub.
+// Paths only; every label and one-line description comes from the page's own content file, in each language.
+// Paths end with a slash, as the static export writes every page to <path>/index.html.
 
 export const contactEmail = "hello@exodusgaming.io";
 
 // Short list in the header bar (hidden on narrow screens; the menu button opens everything).
-export const headerLinks: NavLink[] = [
-  { label: "Solutions", href: "/solutions/" },
-  { label: "Products", href: "/products/" },
-  { label: "Integrations", href: "/integrations/" },
-  { label: "About", href: "/about/" },
-];
+export const headerNav = ["/solutions/", "/products/", "/integrations/", "/about/"];
 
 // Numbered list in the full-screen menu.
-export const menuLinks: NavLink[] = [
-  { label: "About", href: "/about/" },
-  { label: "Products", href: "/products/" },
-  { label: "Solutions", href: "/solutions/" },
-  { label: "Payment Solutions", href: "/payment-solutions/" },
-  { label: "Game Providers", href: "/game-providers/" },
-  { label: "Sportsbook", href: "/sportsbook/" },
-  { label: "Integrations", href: "/integrations/" },
-  { label: "Contact", href: "/contact/" },
+export const menuNav = [
+  "/about/",
+  "/products/",
+  "/solutions/",
+  "/payment-solutions/",
+  "/game-providers/",
+  "/sportsbook/",
+  "/integrations/",
+  "/contact/",
 ];
 
-export const productGroups: NavGroup[] = [
-  {
-    title: "Products",
-    href: "/products/",
-    links: [
-      { label: "Platform", href: "/products/platform/" },
-      { label: "Exodus AI", href: "/products/exodus-ai/" },
-      { label: "Exodus Engine", href: "/products/exodus-engine/" },
-      { label: "Aggregator", href: "/products/aggregator/" },
-      { label: "Jackpots", href: "/products/jackpots/" },
-    ],
-  },
-  {
-    title: "Solutions",
-    href: "/solutions/",
-    links: [
-      { label: "Turnkey Casino", href: "/solutions/turnkey-casino/" },
-      { label: "White Label", href: "/solutions/white-label/" },
-      { label: "White Label Plus", href: "/solutions/white-label-plus/" },
-      { label: "Sweepstakes", href: "/solutions/sweepstakes/" },
-      { label: "Crypto Casino", href: "/solutions/crypto-casino/" },
-      { label: "Game Aggregation", href: "/solutions/game-aggregation/" },
-      { label: "Licensing & Banking", href: "/solutions/licensing-and-banking/" },
-    ],
-  },
-  {
-    title: "Integrations",
-    href: "/integrations/",
-    links: [
-      { label: "CRM", href: "/integrations/crm/" },
-      { label: "Affiliate Systems", href: "/integrations/affiliate-systems/" },
-      { label: "Analytics & Tracking", href: "/integrations/analytics-and-tracking/" },
-      { label: "Risk & Fraud", href: "/integrations/risk-and-fraud/" },
-      { label: "Communication", href: "/integrations/communication/" },
-    ],
-  },
-];
-
-export const companyGroup: NavGroup = {
-  title: "Company",
-  links: [
-    { label: "About", href: "/about/" },
-    { label: "Payment Solutions", href: "/payment-solutions/" },
-    { label: "Game Providers", href: "/game-providers/" },
-    { label: "Sportsbook", href: "/sportsbook/" },
-    { label: "Contact", href: "/contact/" },
+// Hub pages and their children, in order. Drives the menu and footer columns, the breadcrumbs and the
+// "More in …" cards at the bottom of every child page.
+export const hubs: Record<PagePath, PagePath[]> = {
+  "/products/": [
+    "/products/platform/",
+    "/products/exodus-ai/",
+    "/products/exodus-engine/",
+    "/products/aggregator/",
+    "/products/jackpots/",
+  ],
+  "/solutions/": [
+    "/solutions/turnkey-casino/",
+    "/solutions/white-label/",
+    "/solutions/white-label-plus/",
+    "/solutions/sweepstakes/",
+    "/solutions/crypto-casino/",
+    "/solutions/game-aggregation/",
+    "/solutions/licensing-and-banking/",
+  ],
+  "/integrations/": [
+    "/integrations/crm/",
+    "/integrations/affiliate-systems/",
+    "/integrations/analytics-and-tracking/",
+    "/integrations/risk-and-fraud/",
+    "/integrations/communication/",
   ],
 };
 
-// TODO(#6542): real profile URLs from marketing; the mockup links to the site roots.
-export const socialLinks: NavLink[] = [
+// The footer's last column.
+export const companyNav = ["/about/", "/payment-solutions/", "/game-providers/", "/sportsbook/", "/contact/"];
+
+// Under the wordmark in the footer.
+export const legalNav = ["/privacy-policy/", "/cookie-policy/", "/terms/"];
+
+// TODO(#6545): real profile URLs from marketing; the mockup links to the site roots.
+export const socialLinks = [
   { label: "LinkedIn", href: "https://www.linkedin.com/" },
   { label: "Telegram", href: "https://t.me/" },
 ];

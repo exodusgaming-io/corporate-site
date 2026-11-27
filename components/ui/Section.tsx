@@ -12,10 +12,33 @@ const tones: Record<Tone, { tone: "dark" | "light"; bg: string }> = {
   light: { tone: "light", bg: "bg-platinum" },
 };
 
+export type Pad = "none" | "xs" | "sm" | "md" | "lg" | "xl";
+
+const padTop: Record<Pad, string> = {
+  none: "pt-0",
+  xs: "pt-section-xs",
+  sm: "pt-section-sm",
+  md: "pt-section-md",
+  lg: "pt-section",
+  xl: "pt-section-xl",
+};
+const padBottom: Record<Pad, string> = {
+  none: "pb-0",
+  xs: "pb-section-xs",
+  sm: "pb-section-sm",
+  md: "pb-section-md",
+  lg: "pb-section",
+  xl: "pb-section-xl",
+};
+const spacings = { default: "lg", small: "sm", none: "none" } as const;
+
 type SectionProps = {
   tone?: Tone;
   // Vertical padding: the mockups use one large and one smaller step; "none" for sections that set their own.
   spacing?: "default" | "small" | "none";
+  // Top and bottom separately, when a section follows the mockup's own steps (overrides spacing).
+  pt?: Pad;
+  pb?: Pad;
   className?: string;
   innerClassName?: string;
   children: ReactNode;
@@ -25,6 +48,8 @@ type SectionProps = {
 export function Section({
   tone = "dark",
   spacing = "default",
+  pt,
+  pb,
   className,
   innerClassName,
   children,
@@ -37,8 +62,8 @@ export function Section({
       className={cn(
         "relative px-gutter text-fg",
         bg,
-        spacing === "default" && "py-section",
-        spacing === "small" && "py-section-sm",
+        padTop[pt ?? spacings[spacing]],
+        padBottom[pb ?? spacings[spacing]],
         className,
       )}
       {...rest}
@@ -65,7 +90,7 @@ export function SectionHeader({ eyebrow, index, title, aside, as: Heading = "h2"
         {eyebrow && <Eyebrow index={index}>{eyebrow}</Eyebrow>}
         <Heading className="font-display text-heading-xl text-balance">{title}</Heading>
       </div>
-      {aside && <div className="max-w-[26rem] text-body-lg text-pretty text-fg-soft">{aside}</div>}
+      {aside && <div className="max-w-[25rem] text-body-lg text-pretty text-fg-soft">{aside}</div>}
     </div>
   );
 }
